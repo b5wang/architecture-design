@@ -1,0 +1,160 @@
+# client config
+[client]
+port            = 3306
+# 2 ways about client connects server. Unix socket connection solution, other one is TCP/IP. socket is faster than TCP/IP, but is for local connection 
+socket          = /data/mysql/mysql.sock
+default-character-set=utf8mb4
+
+
+
+
+
+# mysql command line tool
+[mysql]
+default-character-set=utf8mb4
+# no auto filling function on command line tool. This is disabled. For enabled using auto-rehash
+no-auto-rehash
+
+
+
+
+
+# The MySQL server, server config
+[mysqld]
+# *** generic options ***
+server-id = 1
+port            = 3306
+socket          = /data/mysql/mysql.sock
+# By default using caching_sha2_password. mysql_native_password is old way of password encryption
+# default-authentication-plugin=mysql_native_password
+
+datadir=/data/mysql/data
+
+# mysql check client by host name (0) or ip (1). Skip server convert the client ip to host name
+# disable name resolve can optimize the server performance
+skip-name-resolve
+
+# import or export file path limit. NULL - forbid import or export completely; '' or empty value(?) - no limit; a specific path
+secure_file_priv=''
+
+# gtid mode, data copy from master to slave
+gtid_mode = ON
+enforce_gtid_consistency = ON
+# binlog will be delete after 15 days
+expire-logs-days=15
+# By default 50. If server busy, this the max amount of requests can be cached in stack.
+# When connection reach max_connections, the request can be cached in stack.
+back_log = 500
+max_connections = 10000
+max_connect_errors =100000
+table_open_cache = 2048
+thread_stack=500K;
+
+# *** character related option ***
+character-set-client-handshake = FALSE
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+init_connect = 'SET NAMES utf8mb4'
+lower_case_table_names=1
+
+# *** INNODB Specific options ***
+default-storage-engine = innodb
+transaction_isolation = READ-COMMITTED
+innodb_buffer_pool_size = 8G      # adjust value here, 50%-70% of total RAM
+innodb_data_file_path = ibdata1:256M:autoextend
+innodb_file_per_table=1
+innodb_thread_concurrency = 8
+innodb_flush_log_at_trx_commit = 1
+sync_binlog=1
+innodb_io_capacity = 600        #adjust according to disk iops
+innodb_io_capacity_max = 2000   #adjust according to disk iops
+innodb_log_buffer_size = 8M
+innodb_log_file_size = 512M
+innodb_log_files_in_group = 4
+innodb_max_dirty_pages_pct = 90
+innodb_lock_wait_timeout = 120
+innodb_flush_method = O_DIRECT_NO_FSYNC
+table_open_cache_instances=8
+innodb_lru_scan_depth=128
+
+# *** MyISAM options
+key_buffer_size = 128M
+myisam_sort_buffer_size = 64M
+
+# *** Other cache options
+skip-external-locking
+max_allowed_packet = 128M
+binlog_cache_size = 1M
+max_heap_table_size = 64M
+sort_buffer_size = 8M
+join_buffer_size = 8M
+#thread_stack = 192K
+tmp_table_size = 128M
+
+# *** about setting of logs
+binlog_format= row
+log_output = table,file
+log-bin = /data/mysql/logs/mysql-bin
+log_bin_trust_function_creators = 1
+
+# *** slowlog options
+slow_query_log = 1
+slow_query_log_file = /data/logs/mysql/slow.log
+long_query_time = 1
+log_queries_not_using = ON
+
+# *** for slave server
+# gtid
+log_slave_updates = 1
+
+#skip_slave_start
+#read_only=1
+slave_parallel_workers= 4
+slave-parallel-type = LOGICAL_CLOCK
+
+# ***  Replication related settings
+relay_log_info_repository = TABLE
+master_info_repository = TABLE
+relay_log_recovery = on
+relay-log = /data/mysql/relay-bin
+
+# set sql_mode, and skip innodb strict check
+sql_mode="NO_ENGINE_SUBSTITUTION"
+innodb_strict_mode=off
+
+log-error=/data/logs/mysql/VM-DC-DBSLSMS01.log
+
+
+
+
+
+[mysqldump]
+quick
+max_allowed_packet = 128M
+
+
+
+
+
+[myisamchk]
+key_buffer_size = 128M
+sort_buffer_size = 64M
+read_buffer = 8M
+write_buffer = 8M
+
+
+
+
+
+
+[mysqlhotcopy]
+interactive-timeout
+
+
+
+
+
+
+[mysqld_safe]
+open-files-limit = 65535
+

@@ -1,0 +1,87 @@
+Mysql Replication DC-DR
+
+Step 1：在生产环境中的 DC 主服务器上定义数据目录和 bin 日志文件
+从配置文件mysql.conf中我们看到如下两行：
+datadir=/data/mysql/data
+log-bin=/data/mysql/logs/mysql-bin
+从而确定所有bin日志和数据都位于/data/mysql
+总之，将mysql文件夹复制到/data/mysql
+
+与 DR 上的服务器执行相同的操作以获取 datadir 和 log-bin 信息
+
+
+
+Step 2：如何执行从 DC 到 DR 的同步. Master server on DC: 10.1.52.253
+
+1. Stop Master:
+supervisorctl stop mysqld
+
+
+
+2. Copy master backup to slave
+cd /backup
+tar -cvzf mysql_04122022.tar.gz /data/mysql
+scp -a /backup/mysql_04122022.tar.gz slave_dr_ip:/backup/
+
+DR: 10.6.52.253
+
+
+
+3. Stop slave server:
+sudo service mysqld stop
+
+
+
+4. 删除slave上的旧数据文件夹，替换为刚刚从master复制到的数据文件夹
+cd /data
+rm -rf mysql
+tar -xvzf /backup/mysql_04122022.tar.gz
+确定并验证权限，以及刚刚提取的文件夹的位置
+如果是，则再次启动slave
+
+### 直接整体拷贝数据文件
+
+
+5. Start master : 10.1.52.253 server on DC
+supervisorctl start mysqld
+
+
+
+6. Start slave server:
+sudo service mysqld start
+
+
+
+7. Go to mysql console of slave to execut:
+change master to MASTER_HOST='master_host',MASTER_USER='user_replicate', MASTER_PASSWORD='password_replicate', MASTER_AUTO_POSITION=1;
+start slave;
+
+
+
+
+
+Step 3: Switch DR: 10.6.52.253 to master, DC: 10.1.52.253 to slave
+
+On 10.6.52.253 execute:
+stop slave;
+reset slave;
+
+
+
+On 10.1.52.253, execute
+change master to MASTER_HOST='10.6.52.253',MASTER_USER='user_replicate', master_auto_posiiton= 1;
+start slave;
+show slave status\G;
+
+
+
+Step 4: Switch DC: 10.1.52.253 to master, DR: 10.6.52.253 to slave
+
+On 10.1.52.253
+stop slave;
+reset slave;
+
+On 10.6.52.253
+change master to MASTER_HOST='10.1.52.253',MASTER_USER='user_replicate', master_auto_posiiton= 1;
+start slave;
+show slave status\G;

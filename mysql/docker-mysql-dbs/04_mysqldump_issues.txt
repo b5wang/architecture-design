@@ -1,0 +1,49 @@
+mysqldump issues:
+#------------------------------------------------------------------------------
+# Options,
+# --compact, remove useless comments from dump file
+# --quick, 
+# --master-data[=1|2]. [1] CHANGE MASTER TO MASTER_LOG_FILE='mysql-bin.000005', MASTER_LOG_POS=196;
+#                      [2] -- CHANGE MASTER TO MASTER_LOG_FILE='mysql-bin.000005', MASTER_LOG_POS=196;
+# 在gtid_mode下,master slave replication搭建是否要开这个参数那？
+# mysqldump --help | grep -A 50 '--set-gtid-purged'
+# --set-gtid-purged[=ON|COMMENTED|OFF|AUTO]
+#                       in dump sql, added SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '9f778858-7b61-11ed-8a2d-0242ac120003:1-70';
+<<<
+mysql> show variables like '%gtid%';
++----------------------------------+-------------------------------------------+
+| Variable_name                    | Value                                     |
++----------------------------------+-------------------------------------------+
+| binlog_gtid_simple_recovery      | ON                                        |
+| enforce_gtid_consistency         | ON                                        |
+| gtid_executed                    | 9f778858-7b61-11ed-8a2d-0242ac120003:1-70 |
+| gtid_executed_compression_period | 0                                         |
+| gtid_mode                        | ON                                        |
+| gtid_next                        | AUTOMATIC                                 |
+| gtid_owned                       |                                           |
+| gtid_purged                      |                                           |
+| session_track_gtids              | OFF                                       |
++----------------------------------+-------------------------------------------+
+>>>
+#
+
+
+#------------------------------------------------------------------------------
+1. Error 2013: Lost connection to MySQL server during query when dumping
+# mysqldump: Error 2013: Lost connection to MySQL server during query when dumping table 'cif_client_hist' at row: 3010327
+# Solution: 
+#(1) SET GLOBAL net_write_timeout=1800;
+# By default, it is 60 seconds, can upgrade this value,
+<<<
+mysql> show variables like 'net_write_timeout';
++-------------------+-------+
+| Variable_name     | Value |
++-------------------+-------+
+| net_write_timeout | 60    |
++-------------------+-------+
+>>>
+#(2) Use --quick option in mysqldump. 
+# But by default this is true, from mysqldump --help
+
+
+

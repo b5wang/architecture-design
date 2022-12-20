@@ -1,0 +1,120 @@
+mysqldump hot backup and master-slave set up
+
+//--------------------------------------------------------------------
+Executed_Gtid_Set与server_uuid的关系
+server_uuid是MySQL Server的只读变量，保存在数据目录下的auto.cnf中，可直接通过cat命令查看
+Executed_Gtid_Set=server_uuid:transaction_id
+
+
+mysql> show master status \G;
+*************************** 1. row ***************************
+             File: mysql-bin.000005
+         Position: 196
+     Binlog_Do_DB: 
+ Binlog_Ignore_DB: 
+Executed_Gtid_Set: 8c32cb2a-76bc-11ed-b324-0242ac130002:1-21
+
+
+mysql> show global  variables like  'server_uuid' ;
++---------------+--------------------------------------+
+| Variable_name | Value                                |
++---------------+--------------------------------------+
+| server_uuid   | 8c32cb2a-76bc-11ed-b324-0242ac130002 |
++---------------+--------------------------------------+
+1 row in set (0.04 sec)
+
+
+mysql> show global variables like 'gtid_%';
++----------------------------------+-------------------------------------------+
+| Variable_name                    | Value                                     |
++----------------------------------+-------------------------------------------+
+| gtid_executed                    | 8c32cb2a-76bc-11ed-b324-0242ac130002:1-21 |
+| gtid_executed_compression_period | 0                                         |
+| gtid_mode                        | ON                                        |
+| gtid_owned                       |                                           |
+| gtid_purged                      |                                           |
++----------------------------------+-------------------------------------------+
+
+
+在slave启动同步的时候指定
+MASTER_LOG_FILE='mysql-bin.000003',MASTER_LOG_POS=2546,MASTER_AUTO_POSITION=0;
+或者
+MASTER_AUTO_POSITION=1;
+
+
+//------------------------------------------------------------------------
+从库：
+show slave status \G;# get
+Executed_Gtid_Set: 
+059aab73-bd7e-11e9-9f2e-005056b7360f:785014722-785915551,
+1f7133df-aa0b-11e9-af7d-005056b7a90a:1-8157448,
+bca9ac2e-aa0a-11e9-ac0c-005056b71124:1-6306
+
+记录对应的Executed_Gtid_Set值：1f7133df-aa0b-11e9-af7d-005056b7a90a:1-8157448
+
+reset master;
+# 重置从库上的binlog，该操作会清空从库上的mysql.gtid_executed表中的内容
+
+set global gtid_purged='1f7133df-aa0b-11e9-af7d-005056b7a90a:1-8157448';
+
+
+
+//------------------------------------------------------------------------
+1. master-data,1-在备份中会设置binlog_file和binlog_pos,2-注释掉file和pos的语句
+--master-data=1|2
+--master-data用于在master端dump数据，用于建立slave
+--dump-slave用户在slave端dump数据，建立新的slave,至少是第2个slave,也就是已经有A-->B,现在从B上导出数据建立A-->C的复制
+--compress 压缩导出文件
+
+mysqldump -uroot -p --single-transaction --all-databases --triggers --routines --events --default-character-set=utf8mb4 --quick --master-data=1 > dump_1.sql
+
+# mysqldump -uroot -p111 --single-transaction --all-databases --triggers --routines --default-character-set=utf8mb4 --quick --master-data=1 > dump_1.sql
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
+Warning: A partial dump from a server that has GTIDs will by default include the GTIDs of all transactions, 
+even those that changed suppressed parts of the database. 
+If you don't want to restore GTIDs, pass --set-gtid-purged=OFF. 
+To make a complete dump, pass --all-databases --triggers --routines --events. 
+
+mysqldump -uroot -p --single-transaction --all-databases --quick --master-data=1 > dump_2.sql
+
+2. mysqldump 和 mysqlpump: mysqlpump is not safe.
+
+
+//------------------------------------------------------------------------
+# set read_only
+> show variables like 'read_only';
+> set global read_only=1;
+# resart mysql instance, read_only will become invalid.
+
+Proper process:
+1. set
+FLUSH TABLES WITH READ LOCK;
+SET GLOBAL read_only = 1;
+
+2. recover
+SET GLOBAL read_only = 0;
+UNLOCK TABLES;
+
+
+
+//------------------------------------------------------------------------
+1.从库停止主从复制
+mysql> stop slave;
+mysql> reset slave all;
+mysql> show slave status\G
+
+2.主库初始化. 会丢失binlog文件，一般不要使用这个
+-Reset binlog file to 1
+-Reset position to 1
+mysql> reset master;
+mysql> show master status\G;
+
+
+//------------------------------------------------------------------------
+# drop database mydb;
+
+1. 恢复数据库
+mysql –uroot –p
+mysql> source /var/lib/mysql/dumps/dump_1.sql
+
+

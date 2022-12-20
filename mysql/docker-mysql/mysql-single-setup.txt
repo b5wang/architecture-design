@@ -1,0 +1,22 @@
+Create a single mysql instance by docker and docker compose.
+
+
+- Create it with docker command,
+$ docker run --name mysql -v /my/custom:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=root -d mysql:8.0.31
+$ docker run --name mysql -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 -d mysql:8.0.31
+
+
+Look for mysqlbinlog
+$ docker run --name mysql -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 -d mysql:8.0.23
+
+
+8.0 is the latest version of 8.0.x
+$ docker run --name mysql -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 -d mysql:8.0
+
+
+Check binlog file
+$ mysqlbinlog --no-defaults -vv mysql-bin.000003 | grep -A 200 '4123'
+
+Last_SQL_Error: Coordinator stopped because there were error(s) in the worker(s). The most recent failure being: Worker 1 failed executing transaction '2e542a7c-7452-11ed-a38f-0242ac120002:34' at master log mysql-bin.000003, end_log_pos 8311. See error log and/or performance_schema.replication_applier_status_by_worker table for more details about this failure or others, if any.
+
+$ mysqlbinlog --no-defaults -vv mysql-bin.000003 | grep -A 200 '8311'

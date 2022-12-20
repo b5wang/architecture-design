@@ -1,0 +1,294 @@
+Topic of this experiment:
+Simulate the following scenario:
+(1) Create a master slave replication for an existing running database
+    - mysql-1: existing running db, it will become master
+    - mysql-2: become a slave in replication architecture
+
+(2) Data replication failed between master and slave
+    - Data inconsistency between master and slave database. For example, accidental data modification on slave.
+    
+(3) Fix the replication issue without downtime, make the master slave work well.
+    - Hot backup the whole master database.
+    - Stop and clean slave status
+    - Recover the data with master dump file
+    - Recreate master slave status
+
+
+
+-------------------------------------------------------------------------
+1. Create a master slave replication for an existing running database
+
+1.1-Create 2 mysql databases
+>>>
+cd docker-mysql-dbs
+./build.sh
+<<<
+# Create 2 standalone mysql db
+# mysql-1 : 3304
+# mysql-2 : 3305
+# the default information can be found in docker desktop
+
+1.2-Create databases and data on mysql-1. This is to simulate mysql-1 is an existing running DB.
+By default there is 1 DB created when container is set up, mydb. Create 1 more DBs.
+CREATE DATABASE mydb2;
+Create table and insert into some data repectively on these 2 DBs.
+>>>
+CREATE TABLE IF NOT EXISTS kv(
+    k INT PRIMARY KEY AUTO_INCREMENT,
+    v VARCHAR(255)
+);
+insert into kv(v) values(now());# execute 5 times
+select * from kv;
+<<<
+
+1.3-Hot backup mysql-1, all databases
+<<<(mysql-1)
+mysqldump -uroot -p --single-transaction --all-databases --triggers --routines --events --quick --master-data=1 > dump_1.sql
+# or, because not sure we need following options
+# --triggers
+# --routines
+# --events
+# --quick, ON by default
+# --compress
+mysqldump -uroot -p --single-transaction --all-databases --master-data=1 > dump_1.sql
+
+1.4-Recover mysql-2 with dump_1.sql
+# copy the dump file to mysql-2
+<<<(mysql-2)
+mysql -uroot -p
+source /var/lib/mysql/dump_1.sql
+
+1.5-Set up master slave and start replicate
+<<<master mysql-1
+$ mysql -uroot -p111
+mysql> CREATE USER "mydb_slave_user"@"%" IDENTIFIED BY "mydb_slave_pwd"; 
+mysql> GRANT REPLICATION SLAVE ON *.* TO "mydb_slave_user"@"%";
+mysql> FLUSH PRIVILEGES;
+mysql> SHOW MASTER STATUS \G;
+>>>
+<<<slave mysql-2
+$ mysql -uroot -p111
+mysql> stop slave;
+mysql> CHANGE MASTER TO MASTER_HOST='mysql-1',MASTER_PORT=3306,MASTER_USER='mydb_slave_user',MASTER_PASSWORD='mydb_slave_pwd',MASTER_LOG_FILE='mysql-bin.000003',MASTER_LOG_POS=2546;
+# CHANGE MASTER TO MASTER_HOST='mysql-1',MASTER_PORT=3306,MASTER_USER='mydb_slave_user',MASTER_PASSWORD='mydb_slave_pwd',MASTER_LOG_FILE='<binlog_file>',MASTER_LOG_POS=<binlog_pos>;
+or
+# need gtid_mode=on
+mysql> CHANGE MASTER TO MASTER_HOST='mysql-1',MASTER_PORT=3306,MASTER_USER='mydb_slave_user',MASTER_PASSWORD='mydb_slave_pwd',MASTER_AUTO_POSITION=1;
+mysql> start slave;
+mysql> show slave status \G;
+
+
+
+2. Let replication failed(changing data on both sides to make data conflict.)
+2.1-On slave insert id=11 new record
+<<<
+insert into kv(v) values(now());# execute 1 time
+>>>
+
+2.2-On master insert id=11 new record 
+<<<
+insert into kv(v) values(now());# execute 10 times
+>>>
+
+2.3-Check slave status
+<<<
+mysql> show slave status \G;
+*************************** 1. row ***************************
+               Slave_IO_State: Waiting for master to send event
+                  Master_Host: mysql-1
+                  Master_User: mydb_slave_user
+                  Master_Port: 3306
+                Connect_Retry: 60
+              Master_Log_File: mysql-bin.000003
+          Read_Master_Log_Pos: 8824
+               Relay_Log_File: mysql-relay.000002
+                Relay_Log_Pos: 4200
+        Relay_Master_Log_File: mysql-bin.000003
+             Slave_IO_Running: Yes
+            Slave_SQL_Running: No
+              Replicate_Do_DB: 
+          Replicate_Ignore_DB: 
+           Replicate_Do_Table: 
+       Replicate_Ignore_Table: 
+      Replicate_Wild_Do_Table: 
+  Replicate_Wild_Ignore_Table: 
+                   Last_Errno: 1062
+                   Last_Error: Coordinator stopped because there were error(s) in the worker(s). The most recent failure being: Worker 1 failed executing transaction '9f778858-7b61-11ed-8a2d-0242ac120003:39' at master log mysql-bin.000003, end_log_pos 8793. See error log and/or performance_schema.replication_applier_status_by_worker table for more details about this failure or others, if any.
+                 Skip_Counter: 0
+          Exec_Master_Log_Pos: 8514
+              Relay_Log_Space: 4715
+              Until_Condition: None
+               Until_Log_File: 
+                Until_Log_Pos: 0
+           Master_SSL_Allowed: No
+           Master_SSL_CA_File: 
+           Master_SSL_CA_Path: 
+              Master_SSL_Cert: 
+            Master_SSL_Cipher: 
+               Master_SSL_Key: 
+        Seconds_Behind_Master: NULL
+Master_SSL_Verify_Server_Cert: No
+                Last_IO_Errno: 0
+                Last_IO_Error: 
+               Last_SQL_Errno: 1062
+               Last_SQL_Error: Coordinator stopped because there were error(s) in the worker(s). The most recent failure being: Worker 1 failed executing transaction '9f778858-7b61-11ed-8a2d-0242ac120003:39' at master log mysql-bin.000003, end_log_pos 8793. See error log and/or performance_schema.replication_applier_status_by_worker table for more details about this failure or others, if any.
+  Replicate_Ignore_Server_Ids: 
+             Master_Server_Id: 1
+                  Master_UUID: 9f778858-7b61-11ed-8a2d-0242ac120003
+             Master_Info_File: mysql.slave_master_info
+                    SQL_Delay: 0
+          SQL_Remaining_Delay: NULL
+      Slave_SQL_Running_State: 
+           Master_Retry_Count: 86400
+                  Master_Bind: 
+      Last_IO_Error_Timestamp: 
+     Last_SQL_Error_Timestamp: 221214 06:27:51
+               Master_SSL_Crl: 
+           Master_SSL_Crlpath: 
+           Retrieved_Gtid_Set: 9f778858-7b61-11ed-8a2d-0242ac120003:26-39
+            Executed_Gtid_Set: 9f778858-7b61-11ed-8a2d-0242ac120003:1-38,
+9f7b3e87-7b61-11ed-9144-0242ac120002:1-10
+                Auto_Position: 1
+         Replicate_Rewrite_DB: 
+                 Channel_Name: 
+           Master_TLS_Version: 
+       Master_public_key_path: 
+        Get_master_public_key: 0
+            Network_Namespace: 
+1 row in set, 1 warning (0.00 sec)
+
+ERROR: 
+No query specified
+
+mysql> show master status \G;
+*************************** 1. row ***************************
+             File: mysql-bin.000003
+         Position: 4572
+     Binlog_Do_DB: 
+ Binlog_Ignore_DB: 
+Executed_Gtid_Set: 9f778858-7b61-11ed-8a2d-0242ac120003:1-38,
+9f7b3e87-7b61-11ed-9144-0242ac120002:1-10
+1 row in set (0.00 sec)
+
+ERROR: 
+No query specified
+>>>
+# Now can start solving the issue
+
+
+
+3. Fix repication failure
+3.1-Stop and clean slave
+<<<(mysql-2)
+mysql> stop slave;
+mysql> reset slave all;
+mysql> reset master;# this the fix for below error
+mysql> show slave status\G
+>>>
+# some commands can be selected
+# reset slave, reset master, reset slave all
+
+3.2-Buckup master again
+<<<(mysql-1)
+mysqldump -uroot -p --single-transaction --all-databases --triggers --routines --events --master-data=1 > dump_2.sql
+>>>
+# --quick default is ON
+# test, compare following 2 commands
+# mysqldump -uroot -p --single-transaction --all-databases --triggers --routines --events --master-data=1 > dump_3.sql
+# mysqldump -uroot -p --single-transaction --all-databases --triggers --routines --events --master-data=1 --compress> dump_4.sql
+# Add more data on master mydb and mydb2
+<<<
+insert into kv(v) values(now());# 10 times
+>>>
+
+3.3-Recover slave with dump_2.sql
+<<<(mysql-2)
+mysql –uroot –p
+mysql> source /var/lib/mysql/dump_2.sql
+>>>
+# Checking the data
+# Set and start slave again
+<<<
+mysql> CHANGE MASTER TO MASTER_HOST='mysql-1',MASTER_PORT=3306,MASTER_USER='mydb_slave_user',MASTER_PASSWORD='mydb_slave_pwd',MASTER_AUTO_POSITION=1;
+mysql> start slave;
+mysql> show slave status \G;
+>>>
+
+<<<
+mysql> show slave status \G;
+*************************** 1. row ***************************
+               Slave_IO_State: Waiting for master to send event
+                  Master_Host: mysql-1
+                  Master_User: mydb_slave_user
+                  Master_Port: 3306
+                Connect_Retry: 60
+              Master_Log_File: mysql-bin.000003
+          Read_Master_Log_Pos: 16244
+               Relay_Log_File: mysql-relay.000002
+                Relay_Log_Pos: 418
+        Relay_Master_Log_File: mysql-bin.000003
+             Slave_IO_Running: Yes
+            Slave_SQL_Running: No
+              Replicate_Do_DB: 
+          Replicate_Ignore_DB: 
+           Replicate_Do_Table: 
+       Replicate_Ignore_Table: 
+      Replicate_Wild_Do_Table: 
+  Replicate_Wild_Ignore_Table: 
+                   Last_Errno: 1062
+                   Last_Error: Coordinator stopped because there were error(s) in the worker(s). The most recent failure being: Worker 1 failed executing transaction '9f778858-7b61-11ed-8a2d-0242ac120003:39' at master log mysql-bin.000003, end_log_pos 8793. See error log and/or performance_schema.replication_applier_status_by_worker table for more details about this failure or others, if any.
+                 Skip_Counter: 0
+          Exec_Master_Log_Pos: 8514
+              Relay_Log_Space: 8353
+              Until_Condition: None
+               Until_Log_File: 
+                Until_Log_Pos: 0
+           Master_SSL_Allowed: No
+           Master_SSL_CA_File: 
+           Master_SSL_CA_Path: 
+              Master_SSL_Cert: 
+            Master_SSL_Cipher: 
+               Master_SSL_Key: 
+        Seconds_Behind_Master: NULL
+Master_SSL_Verify_Server_Cert: No
+                Last_IO_Errno: 0
+                Last_IO_Error: 
+               Last_SQL_Errno: 1062
+               Last_SQL_Error: Coordinator stopped because there were error(s) in the worker(s). The most recent failure being: Worker 1 failed executing transaction '9f778858-7b61-11ed-8a2d-0242ac120003:39' at master log mysql-bin.000003, end_log_pos 8793. See error log and/or performance_schema.replication_applier_status_by_worker table for more details about this failure or others, if any.
+  Replicate_Ignore_Server_Ids: 
+             Master_Server_Id: 1
+                  Master_UUID: 9f778858-7b61-11ed-8a2d-0242ac120003
+             Master_Info_File: mysql.slave_master_info
+                    SQL_Delay: 0
+          SQL_Remaining_Delay: NULL
+      Slave_SQL_Running_State: 
+           Master_Retry_Count: 86400
+                  Master_Bind: 
+      Last_IO_Error_Timestamp: 
+     Last_SQL_Error_Timestamp: 221214 07:14:11
+               Master_SSL_Crl: 
+           Master_SSL_Crlpath: 
+           Retrieved_Gtid_Set: 9f778858-7b61-11ed-8a2d-0242ac120003:39-63
+            Executed_Gtid_Set: 9f778858-7b61-11ed-8a2d-0242ac120003:1-38,
+9f7b3e87-7b61-11ed-9144-0242ac120002:1-10
+                Auto_Position: 1
+         Replicate_Rewrite_DB: 
+                 Channel_Name: 
+           Master_TLS_Version: 
+       Master_public_key_path: 
+        Get_master_public_key: 0
+            Network_Namespace: 
+1 row in set, 1 warning (0.00 sec)
+
+ERROR: 
+No query specified
+>>>
+# On master
+mysqlbinlog --no-defaults -vv mysql-bin.000003 | grep -A 100 8793
+Insert id=11 row
+
+mysqlbinlog --no-defaults -vv mysql-bin.000003 | grep -A 100 11924
+
+
+
+# Checking the data in slave
