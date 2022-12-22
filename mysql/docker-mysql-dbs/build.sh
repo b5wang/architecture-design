@@ -2,8 +2,8 @@
 
 docker-compose down -v
 rm -rf ./mysql-1/data
-rm -rf ./mysql-2/data
 mkdir -p ./mysql-1/data
+rm -rf ./mysql-2/data
 mkdir -p ./mysql-2/data
 docker-compose build
 docker-compose up -d

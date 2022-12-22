@@ -1,50 +1,35 @@
 Topic of this experiment:
+Create master-slave replication from scratch
+1. Create 2 new mysql, mysql-1 and mysql-2. Later mysql-1 will become master, and mysql-2 will become slave.
+2. Add some data into mysql-1
+3. Set up slave repliation
+4. Checking the data replication between master and slave
 
 
 
+#------------------------------------------------------------------------------
+1. Create 2 mysql DB
+<<<
+./build.sh
+>>>
 
-1---
-Creating some data for mysql-1
 
+2. Create some data in mysql-1/mydb
+<<<
 CREATE TABLE IF NOT EXISTS kv(
-    k INT,
-    v VARCHAR(255),
-    PRIMARY KEY (k) AUTO_INCREMENT
+    k INT PRIMARY KEY AUTO_INCREMENT,
+    v VARCHAR(255)
 );
 
-insert into kv(k,v) values(1,'1');
-insert into kv(k,v) values(2,'2');
-insert into kv(k,v) values(3,'3');
-insert into kv(k,v) values(4,'4');
-insert into kv(k,v) values(5,'5');
-
-2---
-Full data copy from mysql-1 to mysql-2.
--A-
-- stop mysql-2
-- $ rm -rf mysql-2/data
-- $ copy mysql-1/data to mysql-2/data
-- start mysql-1
--B-
-mysql> FLUSH TABLES WITH READ LOCK;
-mysql> SHOW VARIABLES LIKE '%lock%';
-- master:
-mysqldump -u root -p --all-databases --master-data > dbdump.sql
-mysql> UNLOCK TABLES;
-
-- slave:
-mysql -u root -p < dbdump.sql
+-- execute for 5 times
+insert into kv(v) values(now());
+>>>
 
 
-3---
-Start set up master slave
-mysql-1 master, mysql-2 slave
-
-
-
---mysql-1, master:
-# -e "sql statement to execute"
-$ mysql -uroot -p111
+3. Set up master-slave. mysql-1 master, mysql-2 slave
+On mysql-1, master:
+<<<
+mysql -uroot -p111
 mysql> CREATE USER "mydb_slave_user"@"%" IDENTIFIED BY "mydb_slave_pwd"; 
 mysql> GRANT REPLICATION SLAVE ON *.* TO "mydb_slave_user"@"%";
 mysql> FLUSH PRIVILEGES;
@@ -59,30 +44,32 @@ Executed_Gtid_Set: 69541a24-763b-11ed-97d7-0242ac120002:1-17
 
 ERROR: 
 No query specified
-
-# Note down the file and position values.
-
-
-Add more data before slave replication start:
-insert into kv(k,v) values(6,'6');
-insert into kv(k,v) values(7,'7');
+>>>
 
 
---mysql-2, slave:
-$ mysql -uroot -p111
-mysql> stop slave;
-mysql> CHANGE MASTER TO MASTER_HOST='mysql-1',MASTER_PORT=3306,MASTER_USER='mydb_slave_user',MASTER_PASSWORD='mydb_slave_pwd',MASTER_LOG_FILE='mysql-bin.000003',MASTER_LOG_POS=2546;
-# CHANGE MASTER TO MASTER_HOST='mysql-1',MASTER_PORT=3306,MASTER_USER='mydb_slave_user',MASTER_PASSWORD='mydb_slave_pwd',MASTER_LOG_FILE='<binlog_file>',MASTER_LOG_POS=<binlog_pos>;
-or
-# need gtid_mode=on
+On mysql-2, slave:
+<<<
+mysql -uroot -p111
+# when gtid_mode=on
 mysql> CHANGE MASTER TO MASTER_HOST='mysql-1',MASTER_PORT=3306,MASTER_USER='mydb_slave_user',MASTER_PASSWORD='mydb_slave_pwd',MASTER_AUTO_POSITION=1;
-
-
 mysql> start slave;
 mysql> show slave status \G;
+>>>
+# Other options to set up slave. With log_file and log_pos
+# CHANGE MASTER TO MASTER_HOST='mysql-1',MASTER_PORT=3306,MASTER_USER='mydb_slave_user',MASTER_PASSWORD='mydb_slave_pwd',MASTER_LOG_FILE='mysql-bin.000003',MASTER_LOG_POS=2546;
+# CHANGE MASTER TO MASTER_HOST='mysql-1',MASTER_PORT=3306,MASTER_USER='mydb_slave_user',MASTER_PASSWORD='mydb_slave_pwd',MASTER_LOG_FILE='<binlog_file>',MASTER_LOG_POS=<binlog_pos>;
 
-*****
-Last_IO_Error: Fatal error: The slave I/O thread stops because master and slave have equal MySQL server UUIDs; these UUIDs must be different for replication to work.
-Solution: Stop mysql-2; Remove /data/auto.cnf which was copied from mysql-1; Start mysql-2;
 
 
+
+#------------------------------------------------------------------------------
+mysql> FLUSH TABLES WITH READ LOCK;
+mysql> SHOW VARIABLES LIKE '%lock%';
+- master:
+mysqldump -u root -p --all-databases --master-data > dbdump.sql
+mysql> UNLOCK TABLES;
+
+- slave:
+mysql -u root -p < dbdump.sql
+
+# -e "sql statement to execute"
