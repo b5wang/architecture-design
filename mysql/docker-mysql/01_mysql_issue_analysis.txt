@@ -1,0 +1,65 @@
+#------------------------------------------------------------------------------
+# 1. Transaction isolation level
+# 4 levels: 
+# Can configure in .cnf
+# transaction-isolation=READ-UNCOMMITTED # 读未提交
+# transaction-isolation=READ-COMMITTED   # 读已提交
+# transaction-isolation=REPEATABLE-READ  # 可重复读
+# transaction-isolation=SERIALIZABLE     # 串行化
+<<<
+vshow variables like 'transaction_isolation';
+>>>
+两个事物之间的关系。mysql默认的关系
+transaction-isolation=REPEATABLE-READ
+下面测试一下他们的行为。
+<<<
+// tansaction 1
+start transaction;
+update kv set v='1000' where k='1';
+commit;
+>>>
+<<<
+// transaction 2
+start transaction;
+select * from kv where k='1';
+commit;
+>>>
+Reference:
+https://developer.aliyun.com/article/743691
+
+Repeatable-read Phantom example: 明明看到的是这个值，怎么变了？！
+https://www.cnblogs.com/dreamofprovence/articles/11668080.html
+<<<
+// trx 1
+start transaction;
+select * from kv;
+update kv set v='2022' where k='3';
+select * from kv;
+commit;
+
+// trx 2
+start transaction;
+update kv set v=concat(v,'|2023') where k='3';
+commit;
+>>>
+
+#------------------------------------------------------------------------------
+# @ and @@ in mysql
+# @ is user variable.
+# @@ is system variable.
+<<<
+// define user variable
+SET @var_name = expr [, @var_name = expr]
+
+// get user variable
+select @t1 from dual;
+
+// get global variables
+show global variables
+show global variables like 'transaction_isolation';
+select @@transaction_isolation;
+select @@read_only;
+select @@global.read_only;
+// set system variable
+set global read_only=ON;
+>>>

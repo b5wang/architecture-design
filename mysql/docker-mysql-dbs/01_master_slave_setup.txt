@@ -8,6 +8,45 @@ Create master-slave replication from scratch
 
 
 #------------------------------------------------------------------------------
+Enable gtid mode
+gtid: global transaction identifier. It is globally unique in the scope of overall mysql cluster.
+One gtid is only executed once in a mysql server.
+It replaces the traditional binlog file and position points to simply and enhance the master and slave replication.
+
+GTID = <server_uuid>:<transaction_id>
+
+<<<
+[mysqld]
+......
+# both master and slave configuration
+# gtid mode
+gtid_mode=ON
+enforce_gtid_consistency=ON
+expire-logs-days=15
+log_slave_updates=1
+# binlog
+log_bin=mysql-bin
+binlog_format=ROW
+
+# slave configuration
+# relaylog - replication
+master_info_repository=TABLE
+relay_log_info_repository=TABLE
+relay_log_recovery=ON
+relay-log=mysql-relay
+
+slave-parallel-workers=4
+slave-parallel-type=LOGICAL_CLOCK
+>>>
+
+
+
+#------------------------------------------------------------------------------
+
+
+
+
+#------------------------------------------------------------------------------
 1. Create 2 mysql DB
 <<<
 ./build.sh
@@ -23,6 +62,7 @@ CREATE TABLE IF NOT EXISTS kv(
 
 -- execute for 5 times
 insert into kv(v) values(now());
+select * from kv;
 >>>
 
 

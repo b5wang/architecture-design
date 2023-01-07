@@ -1,0 +1,64 @@
+# Partition replication testing for mysql 8.0.22
+
+1. Build a new master-slave replication.
+
+2. Create a table,
+<<<
+DROP TABLE hist;
+CREATE TABLE IF NOT EXISTS hist(
+    sdate VARCHAR(8),
+    sid VARCHAR(8),
+    val VARCHAR(255)
+)
+PARTITION BY LIST COLUMNS(sdate) (
+    PARTITION p_20221230 VALUES IN ('20221230')
+);
+ALTER TABLE hist ADD PARTITION (PARTITION p_20221231 VALUES IN ('20221231'));
+ALTER TABLE hist ADD PARTITION (PARTITION p_20230101 VALUES IN ('20230101'));
+>>>
+<<<
+DROP TABLE template;
+CREATE TABLE IF NOT EXISTS template(
+    sid VARCHAR(8),
+    val VARCHAR(255)
+)
+// copy data from hist
+insert into template(sid,val) select sid,'999' from hist where sdate='20221230';
+>>>
+
+
+
+3. Create new data with procedure,
+<<<
+DELIMITER $$
+DROP PROCEDURE IF EXISTS insertHist $$ 
+CREATE PROCEDURE insertHist(IN P_SDATE varchar(8))
+BEGIN
+    DECLARE num INT;
+    SET num=0;
+    START TRANSACTION;
+    WHILE num<10000 DO
+	   SET num=num+1;
+       INSERT INTO hist(sdate,sid) VALUES(P_SDATE,CAST(num AS CHAR));
+    END WHILE;
+    COMMIT;
+END $$
+DELIMITER ;
+>>>
+<<<
+// Update val with template table
+
+>>>
+
+
+
+
+
+Set transaction_isolation
+mysql> show variables like 'transaction_isolation';
++-----------------------+-----------------+
+| Variable_name         | Value           |
++-----------------------+-----------------+
+| transaction_isolation | REPEATABLE-READ |
++-----------------------+-----------------+
+1 row in set (0.01 sec)
