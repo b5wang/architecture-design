@@ -66,7 +66,7 @@ set global gtid_purged='1f7133df-aa0b-11e9-af7d-005056b7a90a:1-8157448';
 --dump-slave用户在slave端dump数据，建立新的slave,至少是第2个slave,也就是已经有A-->B,现在从B上导出数据建立A-->C的复制
 --compress 压缩导出文件
 
-mysqldump -uroot -p --single-transaction --all-databases --triggers --routines --events --default-character-set=utf8mb4 --quick --master-data=1 > dump_1.sql
+mysqldump -uroot -p --single-transaction --quick --all-databases --triggers --routines --events --default-character-set=utf8mb4 --master-data=2 > dump_1.sql
 
 # mysqldump -uroot -p111 --single-transaction --all-databases --triggers --routines --default-character-set=utf8mb4 --quick --master-data=1 > dump_1.sql
 mysqldump: [Warning] Using a password on the command line interface can be insecure.
