@@ -14,7 +14,7 @@ services:
   kafka:
     image: docker.io/bitnami/kafka:3.3
     environment:
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper-0:2181
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
     container_name: "kafka"
     restart: "no"
@@ -32,17 +32,45 @@ services:
     ports:
       - 4560:4560
     volumes:
-      - /opt/mingyue/elk/logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./logstash/conf:/usr/share/logstash/config
+      - ./logstash/data:/usr/share/logstash/data
+      - ./logstash/logs:/usr/share/logstash/logs
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
     networks:
       - overlay
+    depends_on:
+      - kafka
+      
+  elasticsearch:
+    image: elasticsearch:7.17.2
+    container_name: "elasticsearch"
+    restart: "no"
+    environment:
+      - "cluster.name=elasticsearch" #设置集群名称为elasticsearch
+      - "discovery.type=single-node" #以单一节点模式启动
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" #设置使用jvm内存大小
+    ports:
+      - 9200:9200    
     volumes:
-      - /opt/mingyue/elk/logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf #挂载logstash的配置文件
+      - ./elasticsearch/plugins:/usr/share/elasticsearch/plugins #插件文件挂载
+      - ./elasticsearch/data:/usr/share/elasticsearch/data #数据文件挂载
+    networks:
+      - overlay
+    depends_on:
+      - logstash
+   
+  kibana:
+    image: kibana:7.17.2
+    container_name: "kibana"
+    restart: "no"
+    environment:
+      - "elasticsearch.hosts=http://elasticsearch:9200" #设置访问elasticsearch的地址
+    ports:
+      - 5601:5601
+    networks:
+      - overlay
     depends_on:
       - elasticsearch #kibana在elasticsearch启动之后再启动
-    
-    
-
-
     
 networks:
   overlay:
