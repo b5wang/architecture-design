@@ -1,0 +1,12 @@
+Reference:
+--Basic:
+https://hub.docker.com/r/bitnami/kafka
+https://developer.confluent.io/learn/kraft/
+https://cloud.tencent.com/developer/article/2026470
+https://www.finclip.com/news/f/30226.html
+
+--Setup:
+https://developer.aliyun.com/article/1054397
+https://www.cnblogs.com/xuwenjin/p/14917360.html
+https://zhuanlan.zhihu.com/p/110905106
+https://bbs.huaweicloud.com/blogs/384664
