@@ -1,0 +1,22 @@
+################################################################################
+# docker compose network access across containers
+<<<
+// Docker has 3 types' network
+docker network ls
+>>>
+# By defult, a docker-compose has been create, docker will also create a default network.
+# zookeeper-cluster --> zookeeper-cluster_default
+# kafka-cluster --> kafka-cluster_default
+# 
+# Create a common network for all applications I am going to create
+<<<
+docker network create public
+>>>
+# In docker-compose.yml, set default network to point to 'public' network
+<<<
+networks:
+  default:
+    external: true
+    name: public
+>>>
+################################################################################

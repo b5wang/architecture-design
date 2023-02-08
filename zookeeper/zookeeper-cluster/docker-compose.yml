@@ -42,3 +42,9 @@ services:
     volumes:
       - ./zoo3/data:/data
       - ./zoo3/datalog:/datalog
+      
+# join a external network      
+networks:
+  default:
+    external: true
+    name: public
