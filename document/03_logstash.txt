@@ -1,0 +1,8 @@
+################################################################################
+Install logstash on windows
+It need Windows PowerShell, logstash 7.x uses jdk17 by default
+<<<
+// checking java_home in powershell
+Write-Host $env:LS_JAVA_HOME
+
+>>>
