@@ -21,7 +21,7 @@ public class LogMakerService {
 
         while(FLAG_SIMPLE_LOG_RUNNING){
             log.info("threadName: {}, currentTime: {}", Thread.currentThread().getName(), new Date());
-            Thread.sleep(200);
+            Thread.sleep(2000);
         }
 
         log.info("threadName: {}, currentTime: {}, logMaker finished", Thread.currentThread().getName(), new Date());

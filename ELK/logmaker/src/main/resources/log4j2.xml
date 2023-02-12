@@ -3,10 +3,9 @@
 <configuration status="info">
     <Properties>
         <!-- 声明日志文件存储的目录 -->
-        <Property name="LOG_HOME">/tmp/logmaker</Property>
+        <Property name="LOG_HOME">/tmp/logmaker</Property><!-- linux tmp folder, or windows current drive tmp folder -->
         <Property name="APP_NAME">test</Property>
-        <Property name="LOG_PATTERN"
-                  value="%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread][%class{36}:%line] - %msg%n"></Property>
+        <Property name="LOG_PATTERN" value="%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread][%class{36}:%line] - %msg%n"></Property>
     </Properties>
     <Appenders>
         <!--输出控制台的配置-->
@@ -25,7 +24,7 @@
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
-                <SizeBasedTriggeringPolicy size="1MB"/>
+                <SizeBasedTriggeringPolicy size="100KB"/><!-- KB，MB，GB -->
             </Policies>
             <!-- 最多保留文件数 -->
             <DefaultRolloverStrategy max="365"/>
