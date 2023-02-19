@@ -1,0 +1,54 @@
+###############################################################################
+# 1. elasticsearch and kibana setup
+unzip elasticsearch-8.6.2-windows-x86_64.zip
+cd elasticsearch-8.6.2\bin
+#In system variable, set ES_JAVA_HOME=%JAVA_HOME%, otherwise es will use the bundled JDK (19).
+elasticsearch.bat
+# Got
+[2023-02-19T23:22:52,682][ERROR][o.e.i.g.GeoIpDownloader  ] [DESKTOP-4NPMSIM] exception during geoip databases updateorg.elasticsearch.ElasticsearchException: not all primary shards of [.geoip_databases] index are active
+        at org.elasticsearch.ingest.geoip@8.6.2/org.elasticsearch.ingest.geoip.GeoIpDownloader.updateDatabases(GeoIpDownloader.java:134)
+        at org.elasticsearch.ingest.geoip@8.6.2/org.elasticsearch.ingest.geoip.GeoIpDownloader.runDownloader(GeoIpDownloader.java:274)
+        at org.elasticsearch.ingest.geoip@8.6.2/org.elasticsearch.ingest.geoip.GeoIpDownloaderTaskExecutor.nodeOperation(GeoIpDownloaderTaskExecutor.java:102)
+        at org.elasticsearch.ingest.geoip@8.6.2/org.elasticsearch.ingest.geoip.GeoIpDownloaderTaskExecutor.nodeOperation(GeoIpDownloaderTaskExecutor.java:48)
+        at org.elasticsearch.server@8.6.2/org.elasticsearch.persistent.NodePersistentTasksExecutor$1.doRun(NodePersistentTasksExecutor.java:42)
+See logs for more details.
+# In elasticsearch.yml, add
+ingest.geoip.downloader.enabled: false
+
+# Generate enrollment token for kibana or other nodes
+elasticsearch-create-enrollment-token.bat -s kibana
+warning: ignoring JAVA_HOME=D:\Tools\Java\jdk-17.0.6; using ES_JAVA_HOME
+eyJ2ZXIiOiI4LjYuMiIsImFkciI6WyIxOTIuMTY4LjEuMzA6OTIwMCJdLCJmZ3IiOiJhYWE4OTA4ZDYxNDYzOTA4ODgxN2M2MDk1NWZmZmQwMDk5MzgyMWY0MTkzOWI1MTNhNWYzZjY5ZDExYzNiNzU0Iiwia2V5IjoiMjdKamFvWUJ4S3NfZU9Hc1ZOTVc6WlY5bzZ5V2RUaW1mdXgyQV81S0xVUSJ9
+# generate user / password for connection
+
+# reset password
+elasticsearch-reset-password.bat -i -u elastic
+warning: ignoring JAVA_HOME=D:\Tools\Java\jdk-17.0.6; using ES_JAVA_HOME
+This tool will reset the password of the [elastic] user.
+You will be prompted to enter the password.
+Please confirm that you would like to continue [y/N]y
+
+
+Enter password for [elastic]:
+Re-enter password for [elastic]:
+Password for the [elastic] user successfully reset.
+
+# Change users and passwords, got
+elasticsearch-setup-passwords interactive
+warning: ignoring JAVA_HOME=D:\Tools\Java\jdk-17.0.6; using ES_JAVA_HOME
+
+Failed to authenticate user 'elastic' against https://192.168.1.30:9200/_security/_authenticate?pretty
+Possible causes include:
+ * The password for the 'elastic' user has already been changed on this cluster
+ * Your elasticsearch node is running against a different keystore
+   This tool used the keystore at D:\Applications\elasticsearch-8.6.2\config\elasticsearch.keystore
+
+You can use the `elasticsearch-reset-password` CLI tool to reset the password of the 'elastic' user
+
+
+ERROR: Failed to verify bootstrap password
+
+
+
+###############################################################################
+unzip kibana-8.6.2-windows-x86_64.zip
