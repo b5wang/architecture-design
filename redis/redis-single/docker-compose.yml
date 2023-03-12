@@ -2,17 +2,19 @@ version: '3.1'
 
 services:
   redis:
+    #image: b5wang/redis:6.2
     image: redis:6.2
     container_name: redis
     restart: "no"
     hostname: redis
     ports:
       - 6379:6379
+    # command: "tail -f /dev/null" #for debugging container
+    command: "redis-server /etc/redis/redis.conf --requirepass redis_pwd"
     volumes:
       - ./redis.conf:/etc/redis/redis.conf
       - ./data:/data
 
-      
 # join a external network      
 networks:
   default:
