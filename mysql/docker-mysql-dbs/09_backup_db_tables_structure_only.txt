@@ -1,0 +1,1 @@
+mysqldump -uroot -p --single-transaction --quick -B mydb-1 --opt -d --triggers --routines --events --default-character-set=utf8mb4 > db_mydb-1.sql

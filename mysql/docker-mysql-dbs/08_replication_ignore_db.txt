@@ -1,0 +1,81 @@
+# Create master-slave replication first,
+# mysql-1 is master, mysql-2 is slave
+# Create database in mysql-1,
+# CREATE DATABASE IF NOT EXISTS `mydb`;
+CREATE DATABASE IF NOT EXISTS `mydb-1`;
+CREATE DATABASE IF NOT EXISTS `mydb-2`;
+CREATE DATABASE IF NOT EXISTS `mydb-3`;
+CREATE DATABASE IF NOT EXISTS `mydb-4`;
+
+SHOW DATABASES;
+
+USE mydb-1;
+
+# Insert data into mydb-1
+CREATE TABLE IF NOT EXISTS kv(
+    k INT PRIMARY KEY AUTO_INCREMENT,
+    v VARCHAR(255)
+);
+
+-- execute for 5 times
+insert into kv(v) values(now());
+select * from kv;
+
+
+# Checking in mysql-2
+show databases;
+user mysql-1;
+show tables;
+select * from kv;
+#------------------------------------------------------------------------------
+# 1. At mysql-2 
+stop slave;
+show slave status \G;
+
+# 2. At mysql-1
+# In mysql.cnf add,
+binlog-ignore-db=mydb-1,mydb-2
+# Restart instance
+
+# 3. At mysql-2 
+start slave;
+show slave status \G;
+
+# 4. At mysql-1
+use mydb-1;
+# execute 5 times
+insert into kv(v) values(now());
+select * from kv;
+use mydb-2;
+CREATE TABLE IF NOT EXISTS kv(
+    k INT PRIMARY KEY AUTO_INCREMENT,
+    v VARCHAR(255)
+);
+# execute 5 times
+insert into kv(v) values(now());
+select * from kv;
+
+# 5. At mysql-2
+use mydb-1;
+select * from kv;
+use mydb-2;
+select * from kv;
+
+<<<
+select database();
+use mydb;
+insert into kv(v) values(now());
+select count(*) from kv;
+>>>
+
+# -----------------------------------------------------------------------------
+# In conf config
+# mysql-1 DBS: 
+# ignore binlog mydb-1,mydb-2
+binlog-ignore-db=mydb-1
+binlog-ignore-db=mydb-2
+
+# mysql-2 DBS: 
+# Ingore mydb-3,mydb-4
+replication-ignore-db=mydb-3
+replication-ignore-db=mydb-4

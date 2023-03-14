@@ -47,6 +47,11 @@ master_info_repository=TABLE
 relay_log_recovery=ON
 relay-log=mysql-relay
 relay-log-index=mysql-relay.index
+# Replication ignore
+#replicate-ignore-db=mydb-1
+#replicate-ignore-db=mydb-2
+#replicate-ignore-db=mydb-3
+#replicate-ignore-db=mydb-4
 
 # character related option
 character-set-client-handshake=FALSE
