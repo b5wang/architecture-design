@@ -1,1 +1,5 @@
 mysqldump -uroot -p --single-transaction --quick -B mydb-1 --opt -d --triggers --routines --events --default-character-set=utf8mb4 > db_mydb-1.sql
+
+
+mysqldump -uroot -p --single-transaction --set-gtid-purged=OFF --triggers --routines --events -d mydb-1 > db_mydb-3.sql
+
