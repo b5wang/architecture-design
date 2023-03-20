@@ -1,19 +1,22 @@
-version: '3'
+version: '3.1'
+
 services:
-  mysql-1:
+  mysql-single:
     image: mysql:8.0.23
     env_file:
       - ./mysql-single/mysql.env
-    container_name: "mysql-single"
+    container_name: mysql-single
     restart: "no"
+    hostname: mysql-single
     ports:
       - 3306:3306
     volumes:
       - ./mysql-single/conf/mysql.conf.cnf:/etc/mysql/conf.d/mysql.conf.cnf
       - ./mysql-single/data:/var/lib/mysql
-    networks:
-      - overlay
 
+# join a external network      
 networks:
-  overlay:
+  default:
+    external: true
+    name: public
 
