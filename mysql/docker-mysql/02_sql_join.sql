@@ -90,3 +90,15 @@ VALUES(1,1,20,'2017-01-02'),
 
 -- Question: 
 -- 统计每个商店每种商品总共营业额是多少钱？
+select st.store_name,pr.product_name,format(sa.quantity*pr.price,2) as total_money
+from sales sa inner join stores st on sa.store_id=st.id inner join products pr on sa.product_id=pr.id;
+
+select st.store_name,pr.product_name,ifnull(null,0.00) from stores st cross join products pr;
+
+
+select st.store_name,pr.product_name,ifnull(t2.total_money,0.00) as total_money from stores st cross join products pr
+left join 
+(select st.store_name,pr.product_name,format(sa.quantity*pr.price,2) as total_money 
+from sales sa inner join stores st on sa.store_id=st.id inner join products pr on sa.product_id=pr.id) t2 
+on st.store_name=t2.store_name and pr.product_name=t2.product_name
+order by st.store_name,pr.product_name;

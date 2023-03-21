@@ -41,6 +41,7 @@ begin
 
 end $$
 
+drop procedure if exists backup_data;
 
 delimiter $$
 CREATE procedure backup_data(in str_date varchar(55))
@@ -58,11 +59,11 @@ end repeat;
 select counter_val;
 end$$
 delimiter ;
--- backup_data('2023-03-14');
+-- call backup_data('2023-03-14');
 
 select date(date_sub(now(), interval 1 day));
 select date(date_sub(now(), interval 0 day));
-
+select * from log_bak limit 100;
 select count(*) from log where created_date>=date_sub(str_to_date('2023-03-15','%Y-%m-%d'), INTERVAL 1 DAY ) and created_date<=str_to_date('2023-03-16','%Y-%m-%d');
 
 
