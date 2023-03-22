@@ -1,0 +1,9 @@
+server:
+  port: 9090
+  tomcat:
+    max-connections: 1
+    accept-count: 0
+
+spring:
+  application:
+    name: handleconnections
