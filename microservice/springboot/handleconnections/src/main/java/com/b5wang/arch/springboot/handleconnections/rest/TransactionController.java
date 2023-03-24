@@ -12,7 +12,7 @@ public class TransactionController {
     public String getTransactions() throws InterruptedException {
 
         log.info("/tran start");
-        Thread.sleep(1000 * 30);
+        Thread.sleep(1000 * 30);// 30 seconds
         log.info("/tran end");
         return "OK";
     }

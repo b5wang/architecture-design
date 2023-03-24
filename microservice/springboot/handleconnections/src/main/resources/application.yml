@@ -1,9 +1,22 @@
 server:
   port: 9090
   tomcat:
-    max-connections: 1
+    # 连接数 > max-connections + accept-count，请求并不会被拒绝。请求在OS的连接队列里。
+    max-connections: 2
+    # Maximum queue length for incoming connection requests when all possible request
     accept-count: 0
+    # 空闲连接在关闭前等待的时间
+    # connection-timeout: 10s
+    threads:
+      max: 2
+      min-spare: 2
+    accesslog:
+      enabled: true
 
 spring:
   application:
     name: handleconnections
+
+logging.level:
+  org.apache.tomcat: DEBUG
+  org.apache.catalina: DEBUG
