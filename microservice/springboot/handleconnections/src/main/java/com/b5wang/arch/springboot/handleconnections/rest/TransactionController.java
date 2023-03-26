@@ -10,7 +10,6 @@ public class TransactionController {
 
     @GetMapping("/tran")
     public String getTransactions() throws InterruptedException {
-
         log.info("/tran start");
         Thread.sleep(1000 * 30);// 30 seconds
         log.info("/tran end");

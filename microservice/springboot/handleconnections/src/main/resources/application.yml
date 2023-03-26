@@ -4,14 +4,17 @@ server:
     # 连接数 > max-connections + accept-count，请求并不会被拒绝。请求在OS的连接队列里。
     max-connections: 2
     # Maximum queue length for incoming connection requests when all possible request
+    # Does not work: https://stackoverflow.com/questions/50079513/tomcat-and-acceptcount-not-working
     accept-count: 0
     # 空闲连接在关闭前等待的时间
     # connection-timeout: 10s
     threads:
-      max: 2
-      min-spare: 2
+      max: 1
+      min-spare: 1
     accesslog:
       enabled: true
+      directory: logs
+      prefix: access_log
 
 spring:
   application:
