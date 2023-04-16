@@ -1,0 +1,117 @@
+# 1. Grant event permission on user
+GRANT EVENT ON <my_schema>.* TO jon@ghidora;
+GRANT EVENT ON *.* TO '<user>'@'%';
+
+
+# ========================================
+# 2. event_scheduler 默认都是打开的
+show variables like 'event_scheduler';
+show variables like '%event%';
+
+-- For existing master-slave, create an event on master, on slave the event is automatically status SLAVESIDE_DISABLED
+select event_name ,status from information_schema.events; 
+
+
+# ========================================
+# Test case 1
+create schema demo;
+create schema demo2;
+
+create table demo.task_exe_hist(
+	id       int not null auto_increment,
+    name     varchar(55) not null,
+    exe_time datetime not null,
+    primary key(id),
+    index idx_task_exe_hist_exe_time (exe_time)
+);
+create table demo2.task_exe_hist(
+	id       int not null auto_increment,
+    name     varchar(55) not null,
+    exe_time datetime not null,
+    primary key(id),
+    index idx_task_exe_hist_exe_time (exe_time)
+);
+
+delimiter $$
+CREATE PROCEDURE demo.exe_task()
+BEGIN
+    insert into task_exe_hist(name,exe_time) values('exe_task',now());
+END$$
+delimiter ;
+
+delimiter $$
+CREATE PROCEDURE demo2.exe_task()
+BEGIN
+    insert into task_exe_hist(name,exe_time) values('exe_task',now());
+END$$
+delimiter ;
+
+-- Testing
+call demo.exe_task();
+call demo2.exe_task();
+-- Query on slave
+select * from demo.task_exe_hist;
+select * from demo2.task_exe_hist;
+
+-- Create event to trigger this 2 task every minutes
+-- https://ost.51cto.com/posts/12200
+delimiter $$
+CREATE EVENT IF NOT EXISTS demo.event_exe_task -- 创建使用create event
+ON SCHEDULE every 1 minute starts '2023-04-16 00:00:00'
+DO
+BEGIN
+    call demo.exe_task();
+    call demo2.exe_task();
+END$$
+delimiter ;
+-- drop event demo.event_exe_task;
+
+-- Checking event information
+-- on Master
+select event_name ,status from information_schema.events;
+# EVENT_NAME, STATUS
+'event_exe_task', 'ENABLED'
+-- Check more 
+select event_name,status from information_schema.events;
+select EVENT_SCHEMA,EVENT_NAME,EVENT_DEFINITION,`STATUS` from information_schema.`EVENTS`;
+select EVENT_SCHEMA,EVENT_NAME,EVENT_DEFINITION,`STATUS` from information_schema.`EVENTS` where a.EVENT_NAME='xxxx';
+
+
+-- on Slave
+select event_name ,status from information_schema.events;
+# EVENT_NAME, STATUS
+'event_exe_task', 'SLAVESIDE_DISABLED'
+
+
+# ========================================
+# Disable event_scheduler on slave
+# Enable Disable event_scheduler=off
+# Enable:
+SET GLOBAL event_scheduler = ON;
+SET @@GLOBAL.event_scheduler = ON;
+SET GLOBAL event_scheduler = 1;
+SET @@GLOBAL.event_scheduler = 1;
+
+# Disable:
+SET GLOBAL event_scheduler = OFF;
+SET @@GLOBAL.event_scheduler = OFF;
+SET GLOBAL event_scheduler = 0;
+SET @@GLOBAL.event_scheduler = 0;
+
+# in .cnf 
+[mysqld]
+event_scheduler=off
+
+mysql> restart
+
+# After disable event_schema, create new schema on master to check if replication works 
+create schema demo3;
+
+
+
+
+
+
+
+
+
