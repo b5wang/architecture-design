@@ -1,0 +1,177 @@
+DataX:
+https://github.com/alibaba/DataX
+
+DataX-Web:
+https://github.com/WeiYe-Jing/datax-web
+https://blog.51cto.com/u_15069490/4187778 
+
+Python3 replace files:
+https://blog.csdn.net/hzp666/article/details/127403135
+
+DataX + DataX-Web: https://github.com/WeiYe-Jing/datax-web/blob/master/userGuid.md
+
+
+# ===============================================
+# Checkout the source code, and stay at master branch
+
+
+
+# ===============================================
+# Create database
+# login db as root
+create schema datax;
+create user dataxopr identified by '111';
+grant all privileges on dataxweb.* to 'dataxopr'@'%';
+flush privileges;
+
+
+cd datax-web-2.1.2/bin
+./install.sh 
+# -----------------------------------------------
+[root@SIT-HN-SF-TPB-LMS-CORE-1 bin]# pwd
+/data/xjk/data_archiving/datax-web-2.1.2/bin
+[root@SIT-HN-SF-TPB-LMS-CORE-1 bin]# ./install.sh
+2023-04-18 20:59:19.362 [INFO] (44066) Creating directory: [/data/xjk/data_archiving/datax-web-2.1.2/bin/../modules].
+2023-04-18 20:59:19.368 [INFO] (44066)  ####### Start To Uncompress Packages ######
+2023-04-18 20:59:19.371 [INFO] (44066) Uncompressing....
+Do you want to decompress this package: [datax-admin_2.1.2_1.tar.gz]? (Y/N)Y
+2023-04-18 20:59:36.297 [INFO] (44066)  Uncompress package: [datax-admin_2.1.2_1.tar.gz] to modules directory
+Do you want to decompress this package: [datax-executor_2.1.2_1.tar.gz]? (Y/N)Y
+2023-04-18 20:59:43.209 [INFO] (44066)  Uncompress package: [datax-executor_2.1.2_1.tar.gz] to modules directory
+2023-04-18 20:59:43.544 [INFO] (44066)  ####### Finish To Umcompress Packages ######
+Scan modules directory: [/data/xjk/data_archiving/datax-web-2.1.2/bin/../modules] to find server under dataxweb
+2023-04-18 20:59:43.549 [INFO] (44066)  ####### Start To Install Modules ######
+2023-04-18 20:59:43.551 [INFO] (44066) Module servers could be installed:
+ [datax-admin]  [datax-executor]
+Do you want to confiugre and install [datax-admin]? (Y/N)Y
+2023-04-18 20:59:52.132 [INFO] (44066)  Install module server: [datax-admin]
+Start to make directory
+2023-04-18 20:59:52.151 [INFO] (44140)  Start to build directory
+2023-04-18 20:59:52.154 [INFO] (44140) Creating directory: [/data/xjk/data_archiving/datax-web-2.1.2/modules/datax-admin/bin/../logs].
+2023-04-18 20:59:52.181 [INFO] (44140) Directory or file: [/data/xjk/data_archiving/datax-web-2.1.2/modules/datax-admin/bin/../conf] has been exist
+2023-04-18 20:59:52.184 [INFO] (44140) Creating directory: [/data/xjk/data_archiving/datax-web-2.1.2/modules/datax-admin/bin/../data].
+end to make directory
+Start to initalize database
+2023-04-18 20:59:52.234 [INFO] (44140)  Scan out mysql command, so begin to initalize the database
+Do you want to initalize database with sql: [/data/xjk/data_archiving/datax-web-2.1.2/bin/db/datax_web.sql]? (Y/N)Y
+Please input the db host(default: 127.0.0.1): 10.0.3.11
+Please input the db port(default: 3306):
+Please input the db username(default: root): dataxopr
+Please input the db password(default: ): 111
+Please input the db name(default: dataxweb)dataxweb
+Do you want to confiugre and install [datax-executor]? (Y/N)Y
+2023-04-18 21:05:29.291 [INFO] (44066)  Install module server: [datax-executor]
+2023-04-18 21:05:29.311 [INFO] (44521)  Start to build directory
+2023-04-18 21:05:29.313 [INFO] (44521) Creating directory: [/data/xjk/data_archiving/datax-web-2.1.2/modules/datax-executor/bin/../logs].
+2023-04-18 21:05:29.341 [INFO] (44521) Directory or file: [/data/xjk/data_archiving/datax-web-2.1.2/modules/datax-executor/bin/../conf] has been exist
+2023-04-18 21:05:29.344 [INFO] (44521) Creating directory: [/data/xjk/data_archiving/datax-web-2.1.2/modules/datax-executor/bin/../data].
+2023-04-18 21:05:29.372 [INFO] (44521) Creating directory: [/data/xjk/data_archiving/datax-web-2.1.2/modules/datax-executor/bin/../json].
+2023-04-18 21:05:29.399 [INFO] (44066)  ####### Finish To Install Modules ######
+[root@SIT-HN-SF-TPB-LMS-CORE-1 bin]#
+# ------------------------------------------------
+
+
+
+
+
+# ------------------------------------------------
+[root@SIT-HN-SF-TPB-LMS-CORE-1 bin]# ./start-all.sh
+2023-04-18 21:34:39.958 [INFO] (46975)  Try To Start Modules In Order
+2023-04-18 21:34:39.965 [INFO] (46983)  ####### Begin To Start Module: [datax-admin] ######
+2023-04-18 21:34:39.972 [INFO] (46991) load environment variables
+/data/xjk/data_archiving/datax-web-2.1.2/bin/../modules/datax-admin/bin/datax-admin.sh: line 143: /usr/local/jdk/bin/jps: No such file or directory
+2023-04-18 21:34:40.109 [INFO] (46991) /usr/local/jdk/bin/java
+2023-04-18 21:34:40.112 [INFO] (46991) Waiting DATAX-ADMIN to start complete ...
+/data/xjk/data_archiving/datax-web-2.1.2/bin/../modules/datax-admin/bin/datax-admin.sh: line 143: /usr/local/jdk/bin/jps: No such file or directory
+/data/xjk/data_archiving/datax-web-2.1.2/bin/../modules/datax-admin/bin/datax-admin.sh: line 143: /usr/local/jdk/bin/jps: No such file or directory
+/data/xjk/data_archiving/datax-web-2.1.2/bin/../modules/datax-admin/bin/datax-admin.sh: line 143: /usr/local/jdk/bin/jps: No such file or directory
+^C
+[root@SIT-HN-SF-TPB-LMS-CORE-1 bin]# ./stop-all.sh
+2023-04-18 21:34:52.346 [INFO] (47225)  Try to Stop Modules In Order
+2023-04-18 21:34:52.354 [INFO] (47233)  ####### Begin To Stop Module: [datax-admin] ######
+2023-04-18 21:34:52.361 [INFO] (47241) load environment variables
+/data/xjk/data_archiving/datax-web-2.1.2/bin/../modules/datax-admin/bin/datax-admin.sh: line 211: /usr/local/jdk/bin/jps: No such file or directory
+2023-04-18 21:34:52.504 [INFO] (47241) DATAX-ADMIN didn't start successfully, not found in the java process table
+2023-04-18 21:34:52.513 [INFO] (47394)  ####### Begin To Stop Module: [datax-executor] ######
+2023-04-18 21:34:52.520 [INFO] (47402) load environment variables
+/data/xjk/data_archiving/datax-web-2.1.2/bin/../modules/datax-executor/bin/datax-executor.sh: line 221: /usr/local/jdk/bin/jps: No such file or directory
+2023-04-18 21:34:52.700 [INFO] (47402) DATAX-EXEXUTOR didn't start successfully, not found in the java process table
+# -------------------------------------------------
+# 9091 is datax-admin server_port
+http://10.0.2.28:9091/index.html
+# Default: admin / 123456
+
+cd /data/xjk/data_archiving/datax-web-2.1.2/modules/datax-executor/bin
+vi env.properties
+---
+# environment variables
+
+#JAVA_HOME=""
+JAVA_HOME=/usr/java/jdk1.8.0_271-amd64/
+
+SERVICE_LOG_PATH=${BIN}/../logs
+SERVICE_CONF_PATH=${BIN}/../conf
+DATA_PATH=${BIN}/../data
+
+
+## datax json文件存放位置
+JSON_PATH=${BIN}/../json
+
+
+## executor_port
+EXECUTOR_PORT=9999
+
+
+## 保持和datax-admin端口一致
+DATAX_ADMIN_PORT=9091
+
+## PYTHON脚本执行位置
+#PYTHON_PATH=/home/hadoop/install/datax/bin/datax.py
+PYTHON_PATH=/data/xjk/data_archiving/datax/bin/datax.py
+
+
+
+## dataxweb 服务端口
+#SERVER_PORT=9504
+SERVER_PORT=9090
+
+#PID_FILE_PATH=${BIN}/service.pid
+
+
+#debug 远程调试端口
+#REMOTE_DEBUG_SWITCH=true
+#REMOTE_DEBUG_PORT=7004
+---
+
+cd /data/xjk/data_archiving/datax-web-2.1.2/modules/datax-admin/bin
+vi env.properties
+---
+# environment variables
+
+#JAVA_HOME=""
+JAVA_HOME=/usr/java/jdk1.8.0_271-amd64/
+
+WEB_LOG_PATH=${BIN}/../logs
+WEB_CONF_PATH=${BIN}/../conf
+
+DATA_PATH=${BIN}/../data
+SERVER_PORT=9091
+
+#PID_FILE_PATH=${BIN}/dataxadmin.pid
+
+
+# mail account
+MAIL_USERNAME=""
+MAIL_PASSWORD=""
+
+
+#debug
+#REMOTE_DEBUG_SWITCH=true
+#REMOTE_DEBUG_PORT=7003
+---
+
+./start-all.sh 
+./stop-akk.sh 
+
+
+

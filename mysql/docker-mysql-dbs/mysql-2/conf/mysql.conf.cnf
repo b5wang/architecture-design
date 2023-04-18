@@ -53,7 +53,9 @@ relay-log-index=mysql-relay.index
 #replicate-ignore-db=mydb-1
 #replicate-ignore-db=mydb-2
 #replicate-ignore-db=mydb-3
-#replicate-ignore-db=mydb-4
+replicate-ignore-db=demo3
+replicate-ignore-db=demo4
+replicate-ignore-db=dataxweb
 
 # character related option
 character-set-client-handshake=FALSE
