@@ -24,6 +24,10 @@ create user dataxopr identified by '111';
 grant all privileges on dataxweb.* to 'dataxopr'@'%';
 flush privileges;
 
+create user datax_tester identified by '111';
+grant all privileges on *.* to 'datax_tester'@'%';
+flush privileges;
+
 
 cd datax-web-2.1.2/bin
 ./install.sh 
