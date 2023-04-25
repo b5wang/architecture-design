@@ -1,0 +1,51 @@
+Install wls at windows
+https://learn.microsoft.com/zh-cn/windows/wsl/install
+
+
+
+查看安装的Linux的版本：
+1. 针对redhat系列：
+cat /etc/redhat-release
+2. 查看Linux版本信息
+cat /proc/version
+uname -a
+3. lsb_release - print distribution-specific information
+lsb_release -a
+4. 适用于所有的Linux发行版
+cat /etc/issue
+
+
+
+5. Linux环境变量配置文件位置：
+https://www.54benniao.com/a/512.html
+
+
+
+6. Install JDK and maven
+Location: 
+/usr/local/java
+/usr/local/maven
+
+Set the system variables in /etc/profile
+Enable them by
+source /etc/profile
+
+
+7. Install git on ubuntu
+git --version # git already install on ubuntu 20.4
+
+Update git
+sudo apt update
+sudo apt install git
+git --version
+
+How to use git?
+https://www.freecodecamp.org/chinese/news/git-and-github-for-beginners/
+
+How to checkout source code from github with Git?
+https://github.com/git-guides
+
+
+
+
+
