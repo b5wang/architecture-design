@@ -1,0 +1,1 @@
+mysqldump -u<user_name> -p<user_password> -d 数据库名 表名 > 脚本名;
