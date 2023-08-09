@@ -1,0 +1,7 @@
+# Download installer
+https://redis.io/download/
+Choose a propriate installer according to your system version. Redis stack is a good choice.
+
+Folder structure:
+bin - commands
+etc - some configuration files
