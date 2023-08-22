@@ -5,3 +5,11 @@ Choose a propriate installer according to your system version. Redis stack is a 
 Folder structure:
 bin - commands
 etc - some configuration files
+
+# Start command
+./redis-server /etc/redis.conf
+
+# Stop
+Get processId from .pid and kill -9 <processId>
+
+# 
