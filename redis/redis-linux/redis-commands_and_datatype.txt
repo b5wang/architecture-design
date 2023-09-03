@@ -1,0 +1,64 @@
+# -----------------------------------------------------
+# 1. string
+Redis strings store sequences of bytes, including 
+    - text
+    - serialized objects
+    - binary arrays
+As such, strings are the simplest type of value you can associate with a Redis key. They're often used for caching, 
+but they support additional functionality that lets you implement counters and perform bitwise operations, too.
+
+Redis key itself is string.
+# connect to remote redis
+$ ./redis-cli -h 127.0.0.1 -p 6379
+
+# set key value
+127.0.0.1:6379> set max_connection 5
+OK
+# get value by key
+127.0.0.1:6379> get max_connection
+"5"
+
+# set and get at the same time
+127.0.0.1:6379> getset max_connection 10
+"5"
+127.0.0.1:6379> get max_connection
+"10"
+
+# set and get multiple key value pairs
+127.0.0.1:6379> mset max_queue 1000 queue_timeout 30000
+OK
+127.0.0.1:6379> mget max_queue queue_timeout
+1) "1000"
+2) "30000"
+
+# String as counter
+127.0.0.1:6379> set access_counter "0"
+OK
+127.0.0.1:6379> incr access_counter
+(integer) 1
+127.0.0.1:6379> incr access_counter
+(integer) 2
+127.0.0.1:6379> incr access_counter
+(integer) 3
+127.0.0.1:6379> incrby access_counter 100
+(integer) 103
+127.0.0.1:6379> decr access_counter
+(integer) 102
+127.0.0.1:6379> decrby access_counter 10
+(integer) 92
+
+# Limits: By default, a single Redis string can be a maximum of 512 MB.
+
+# Use string as a lock: setnx, set a key-value pair only if the key does not exist
+127.0.0.1:6379> setnx transaction_lock_123400987 "1"
+(integer) 1
+
+# Performance:
+Most string operations are O(1), which means they're highly efficient. 
+However, be careful with the SUBSTR, GETRANGE, and SETRANGE commands, which can be O(n). 
+These random-access string commands may cause performance issues when dealing with large strings.
+
+
+
+
+# -----------------------------------------------------

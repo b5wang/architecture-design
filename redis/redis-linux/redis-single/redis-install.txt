@@ -7,9 +7,33 @@ bin - commands
 etc - some configuration files
 
 # Start command
+# About redis.conf, see sample file in this folder
 ./redis-server /etc/redis.conf
 
 # Stop
 Get processId from .pid and kill -9 <processId>
+<<<
+#!/bin/bash
+redis_pid=$(cat /opt/redis/redis-single/data/redis_6379.pid)
+echo "Redis pid: $redis_pid"
+kill -9 $redis_pid
+>>>
 
-# 
+# -----------------------------------------------------------------
+# redis-cli command
+# Connect to local redis instance 
+./redis-cli 
+# Connect to other server
+> connect <hostname> <port> 
+Or
+> ./redis-cli -h 127.0.0.1 -p 6379
+
+# 3 ways to connect remote server,
+redis-cli -h host -p port
+redis-cli -h host -p port -a password
+redis-cli -u redis://password@host:port
+redis-cli -u redis://password@host:port/database
+redis-cli -u redis://username:password@host:port
+redis-cli -u redis://username:password@host:port/database
+redis-cli -tls -u redis://password@host:port
+
