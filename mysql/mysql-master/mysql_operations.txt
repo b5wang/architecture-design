@@ -1,0 +1,72 @@
+# ---------------------------------------------
+# 1. First time start up
+# Setup password for user mysql
+wangbo584@wangbo584 bin % ./mysqld --initialize-insecure --user=mysql
+
+./mysqld --initialize-insecure
+
+2023-09-04T06:00:00.460234Z 0 [System] [MY-013169] [Server] /Users/wangbo584/Workspace/applications/mysql/mysql-8.0.25-master/bin/mysqld (mysqld 8.0.25) initializing of server in progress as process 1922
+2023-09-04T06:00:00.467412Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /Users/wangbo584/Workspace/applications/mysql/mysql-8.0.25-master/data/ is case insensitive
+2023-09-04T06:00:00.469296Z 0 [Warning] [MY-010122] [Server] One can only use the --user switch if running as root
+2023-09-04T06:00:00.492587Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2023-09-04T06:00:00.729091Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2023-09-04T06:00:01.558500Z 6 [Warning] [MY-010453] [Server] root@localhost is created with an empty password ! Please consider switching off the --initialize-insecure option.
+2023-09-04T06:00:02.169533Z 0 [System] [MY-013172] [Server] Received SHUTDOWN from user <via user signal>. Shutting down mysqld (Version: 8.0.25).
+
+
+# ---------------------------------------------
+# 2. First login with mysql
+./mysql -u root -p --socket=/Users/wangbo584/Workspace/applications/mysql/mysql-8.0.25-master/data/mysql.sock
+
+
+# ---------------------------------------------
+# 3. Set password for root
+./mysqladmin --user=root password "111" --socket=/Users/wangbo584/Workspace/applications/mysql/mysql-8.0.25-master/data/mysql.sock
+
+
+# ---------------------------------------------
+# 4. See all Users
+select * from mysql.user\G;
+-- Host: localhost - local user
+-- Access from any remote host '%'
+
+# ---------------------------------------------
+# 5. Create new user and authentication
+CREATE USER 'dog'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'pig'@'192.168.1.101_' IDENDIFIED BY '123456';
+CREATE USER 'pig'@'%' IDENTIFIED BY '123456';
+CREATE USER 'pig'@'%' IDENTIFIED BY '';
+CREATE USER 'pig'@'%';
+
+CREATE USER 'admin'@'%' IDENTIFIED BY '111';
+GRANT ALL ON *.* TO 'admin'@'%';
+
+# Reference: https://www.jianshu.com/p/d7b9c468f20d
+
+
+
+CREATE TABLE t_sym_mb_acct_balance (
+    internal_key decimal(15,0) DEFAULT NULL,
+    amt_type varchar(10) DEFAULT NULL,
+    total_amount decimal(25,2) DEFAULT NULL,
+    ca_amount decimal(25,2) DEFAULT NULL,
+    tt_amount decimal(25,2) DEFAULT NULL,
+    total_amount_prev decimal(25,2) DEFAULT NULL,
+    ca_amount_prev decimal(25,2) DEFAULT NULL,
+    tt_amount_prev decimal(25,2) DEFAULT NULL,
+    last_change_user_id varchar(30) DEFAULT NULL,
+    last_change_date varchar(8) DEFAULT NULL,
+    dac_value varchar(32) DEFAULT NULL,
+    company varchar(20) DEFAULT NULL,
+    tran_timestamp varchar(17) DEFAULT NULL,
+    tran_time decimal(11,0) DEFAULT NULL,
+    router_key varchar(100) DEFAULT NULL
+);
+
+
+v_counter,'BAL',v_counter,v_counter,v_counter,v_counter,v_counter,v_counter,'last_change_user_id',
+'20230904','dac_value','company',now(),now(),'router_key'
+
+
+
+
