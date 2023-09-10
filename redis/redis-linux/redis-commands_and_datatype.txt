@@ -60,5 +60,79 @@ These random-access string commands may cause performance issues when dealing wi
 
 
 
-
 # -----------------------------------------------------
+# 2. List. Redis lists are linked lists of string values. Redis lists are frequently used to:
+# 2.1 Implement stacks and queues. Stack: last in, first out. Queue: first in, first out
+# 2.2 Build queue management for background worker systems.
+# -----
+# List operation
+- LPUSH adds a new element to the head of a list; RPUSH adds to the tail.
+- LPOP removes and returns an element from the head of a list; RPOP does the same but from the tails of a list.
+  BLPOP, BRP
+- LLEN returns the length of a list.
+- LMOVE atomically moves elements from one list to another.
+  For example,
+  lmove list1 list left left
+- LTRIM reduces a list to the specified range of elements. 
+  *** Capped a list
+  ltrim <list> <start> <end>
+- LRANGE Show a list.
+  For exmaple,
+  lrange <list_name> <start_index> <end_index>
+
+# Block commands:
+- BLPOP removes and returns an element from the head of a list. If the list is empty, the command blocks until an element becomes available or until the specified timeout is reached.
+- BLMOVE atomically moves elements from a source list to a target list. If the source list is empty, the command will block until a new element becomes available.
+
+# -----
+# A Stack: last in, first out. Add and get element from the same side
+127.0.0.1:6379> lpush stack_1 1
+(integer) 1
+127.0.0.1:6379> lpush stack_1 2
+(integer) 2
+127.0.0.1:6379> lpush stack_1 3
+(integer) 3
+127.0.0.1:6379> lpush stack_1 4
+(integer) 4
+127.0.0.1:6379> lpush stack_1 5
+(integer) 5
+127.0.0.1:6379> lpop stack_1
+"5"
+127.0.0.1:6379> lpop stack_1
+"4"
+127.0.0.1:6379> lpop stack_1
+"3"
+127.0.0.1:6379> lpop stack_1
+"2"
+127.0.0.1:6379> lpop stack_1
+"1"
+
+# A queue: first in, first out
+127.0.0.1:6379> rpush stack_2 1
+(integer) 1
+127.0.0.1:6379> rpush stack_2 2
+(integer) 2
+127.0.0.1:6379> rpush stack_2 3
+(integer) 3
+127.0.0.1:6379> rpush stack_2 4
+(integer) 4
+127.0.0.1:6379> rpush stack_2 5
+(integer) 5
+127.0.0.1:6379> lpop stack_2
+"1"
+127.0.0.1:6379> lpop stack_2
+"2"
+127.0.0.1:6379> lpop stack_2
+"3"
+127.0.0.1:6379> lpop stack_2
+"4"
+127.0.0.1:6379> lpop stack_2
+"5"
+
+# -----
+# Common use cases for lists:
+- Remember the latest updates posted by users into a social network.
+- Communication between processes, using a consumer-producer pattern where the producer pushes items into a list, 
+  and a consumer (usually a worker) consumes those items and executes actions. Redis has special list commands to make this use case both more reliable and efficient.
+
+
