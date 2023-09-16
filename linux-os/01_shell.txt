@@ -1,0 +1,10 @@
+1. Checking linux version.
+cat /etc/os-release
+lsb_release -a
+uname -a
+
+2. Check linux shell version
+echo $BASH_VERSION
+bash --version
+
+

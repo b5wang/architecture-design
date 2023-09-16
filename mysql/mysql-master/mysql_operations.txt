@@ -16,12 +16,14 @@ wangbo584@wangbo584 bin % ./mysqld --initialize-insecure --user=mysql
 
 # ---------------------------------------------
 # 2. First login with mysql
-./mysql -u root -p --socket=/Users/wangbo584/Workspace/applications/mysql/mysql-8.0.25-master/data/mysql.sock
+./mysql -uroot -p --socket=/Users/wangbo584/Workspace/applications/mysql/mysql-8.0.25-master/data/mysql.sock
+./mysql -uroot -p'' --socket=/opt/mysql/mysql-8.0.34/data/mysql.sock
 
 
 # ---------------------------------------------
 # 3. Set password for root
 ./mysqladmin --user=root password "111" --socket=/Users/wangbo584/Workspace/applications/mysql/mysql-8.0.25-master/data/mysql.sock
+./mysqladmin --user=root password "111" --socket=/opt/mysql/mysql-8.0.34/data/mysql.sock
 
 
 # ---------------------------------------------
@@ -40,6 +42,7 @@ CREATE USER 'pig'@'%';
 
 CREATE USER 'admin'@'%' IDENTIFIED BY '111';
 GRANT ALL ON *.* TO 'admin'@'%';
+FLUSH PRIVILEGES;
 
 # Reference: https://www.jianshu.com/p/d7b9c468f20d
 
@@ -68,5 +71,52 @@ v_counter,'BAL',v_counter,v_counter,v_counter,v_counter,v_counter,v_counter,'las
 '20230904','dac_value','company',now(),now(),'router_key'
 
 
+# -----------------------------------------------------------------
+# Install mysql in ubuntu 22.04
+# Installer: mysql-8.0.34-linux-glibc2.28-x86_64.tar.gz
+# 6. Modify config/mysql.conf
+# 7. Startup command
+nohup /opt/mysql/mysql-8.0.34/bin/mysqld --defaults-file=/opt/mysql/mysql-8.0.34/config/mysql.conf --user=b5wang &
 
 
+# -----------------------------------------------------------------
+# 8. Error
+/opt/mysql/mysql-8.0.34/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+# Fixed by,
+sudo apt-get install libaio1 libaio-dev
+
+
+# -----------------------------------------------------------------
+# 9. Error
+[ERROR] [MY-011011] [Server] Failed to find valid data directory.
+[ERROR] [MY-010020] [Server] Data Dictionary initialization failed.
+[ERROR] [MY-010119] [Server] Aborting
+# Fixed by, 
+./mysqld --initialize --console
+
+b5wang@DESKTOP-B5WANG:/opt/mysql/mysql-8.0.34/bin$ ./mysqld --initialize --console
+2023-09-16T14:45:54.766697Z 0 [System] [MY-013169] [Server] /opt/mysql/mysql-8.0.34/bin/mysqld (mysqld 8.0.34) initializing of server in progress as process 567
+2023-09-16T14:45:54.772903Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2023-09-16T14:45:55.393856Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2023-09-16T14:45:57.247989Z 6 [Note] [MY-010454] [Server] A temporary password is generated for root@localhost: InY2DIuw,;6J
+
+
+# -----------------------------------------------------------------
+# 10. Some warning in error.log
+2023-09-16T15:07:01.826078Z 0 [Warning] [MY-011068] [Server] The syntax 'expire-logs-days' is deprecated and will be removed in a future release. Please use binlog_expire_logs_seconds instead.
+2023-09-16T15:07:01.826084Z 0 [Warning] [MY-011068] [Server] The syntax 'log_slave_updates' is deprecated and will be removed in a future release. Please use log_replica_updates instead.
+2023-09-16T15:07:01.826088Z 0 [Warning] [MY-011068] [Server] The syntax 'slave_parallel_workers' is deprecated and will be removed in a future release. Please use replica_parallel_workers instead.
+2023-09-16T15:07:01.826093Z 0 [Warning] [MY-011068] [Server] The syntax 'slave_parallel_type' is deprecated and will be removed in a future release. Please use replica_parallel_type instead.
+2023-09-16T15:07:01.826095Z 0 [Warning] [MY-011069] [Server] The syntax '--replica-parallel-type' is deprecated and will be removed in a future release.
+2023-09-16T15:07:01.826100Z 0 [Warning] [MY-011070] [Server] 'binlog_format' is deprecated and will be removed in a future release.
+2023-09-16T15:07:01.826104Z 0 [Warning] [MY-011069] [Server] The syntax '--relay-log-info-repository' is deprecated and will be removed in a future release.
+2023-09-16T15:07:01.826108Z 0 [Warning] [MY-011069] [Server] The syntax '--master-info-repository' is deprecated and will be removed in a future release.
+2023-09-16T15:07:01.826140Z 0 [Warning] [MY-010097] [Server] Insecure configuration for --secure-file-priv: Current value does not restrict location of generated files. Consider setting it to a valid, non-empty path.
+
+
+# -----------------------------------------------------------------
+# 11. ERROR 1820 (HY000): You must reset your password using ALTER USER statement before executing this statement.
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '111';
+
+# ALTER USER 'root'@'localhost' IDENTIFIED WITH BY '111';
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'BY '111'' at line 1
