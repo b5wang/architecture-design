@@ -136,3 +136,10 @@ These random-access string commands may cause performance issues when dealing wi
   and a consumer (usually a worker) consumes those items and executes actions. Redis has special list commands to make this use case both more reliable and efficient.
 
 
+
+# -----------------------------------------------------
+# Publish and Subscribe
+# pub / sub
+
+# console window 1
+SUBSCRIBE channel_1 channel_2 
