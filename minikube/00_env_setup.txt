@@ -1,5 +1,5 @@
 1. Install latest docker desktop
-2. Install latest virtual box
+2. Install latest virtual box -- In macOS 13+, minikube does not support virtual box, should use docker
 3. Install latest Minikube
 
 > curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64
@@ -13,3 +13,17 @@
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/amd64/kubectl"
 
 > sudo install kubectl /usr/local/bin/kubectl
+
+##-----------------------------------------------------------
+> minikube start --cpus=8 --driver=docker --memory=8g
+> minikube addons list
+> minikube addons enable dashboard
+> minikube dashboard
+> minikube --help
+> minikube <command> --help
+# expose yaml
+> kubectl get service kubernetes-dashboard --output=yaml --namespace=kubernetes-dashboard
+# apply kubernetes object with yaml
+> kubectl apply --filename=svc-kubernetes-dashboard-loadbalancer.yaml
+> kubectl apply --f svc-kubernetes-dashboard-loadbalancer.yaml
+> minikube tunnel
