@@ -27,3 +27,4 @@ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stabl
 > kubectl apply --filename=svc-kubernetes-dashboard-loadbalancer.yaml
 > kubectl apply --f svc-kubernetes-dashboard-loadbalancer.yaml
 > minikube tunnel
+> 
