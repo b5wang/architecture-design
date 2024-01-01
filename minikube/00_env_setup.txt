@@ -16,6 +16,26 @@ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stabl
 
 ##-----------------------------------------------------------
 > minikube start --cpus=8 --driver=docker --memory=8g
+# my desktop 24cpu 32G rem
+> minikube start --cpus=16 --driver=docker --memory=16g
+##---
+C:\Users\b5wang>minikube start --cpus=16 --driver=docker --memory=16g
+W1113 23:22:28.100002   22300 main.go:291] Unable to resolve the current Docker CLI context "default": context "default": context not found: open C:\Users\b5wang\.docker\contexts\meta\37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f\meta.json: The system cannot find the path specified.
+😄  minikube v1.32.0 on Microsoft Windows 11 Home 10.0.22621.2428 Build 22621.2428
+✨  Using the docker driver based on user configuration
+
+❌  Exiting due to MK_USAGE: Docker Desktop has only 15877MB memory but you specified 16384MB
+
+
+C:\Users\b5wang>docker context use default
+default
+Current context is now "default"
+##---
+> minikube start --cpus=16 --driver=docker --memory=14g
+## Using docker must use tunnel
+> minikube tunnel
+## Install kubernetes with minikube
+> minikube kubectl
 > minikube addons list
 > minikube addons enable dashboard
 > minikube dashboard
