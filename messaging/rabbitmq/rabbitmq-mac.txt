@@ -1,0 +1,3 @@
+# Installation
+https://www.rabbitmq.com/install-generic-unix.html
+
