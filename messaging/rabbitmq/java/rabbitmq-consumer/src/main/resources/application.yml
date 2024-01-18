@@ -1,6 +1,6 @@
 spring:
   application:
-    name: rabbitmq-producer
+    name: rabbitmq-consumer
   rabbitmq:
     host: 127.0.0.1
     port: 5672
@@ -12,9 +12,8 @@ spring:
     publisher-returns: true
     virtual-host: demo
 
-
 server:
-  port: 9090
+  port: 9080
 
 logging:
   level:

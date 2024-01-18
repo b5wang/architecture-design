@@ -1,10 +1,10 @@
-package com.b5wang.architect.rabbitmqproducer;
+package com.b5wang.architect.rabbitmqconsumer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RabbitmqProducerApplicationTests {
+class RabbitmqConsumerApplicationTests {
 
 	@Test
 	void contextLoads() {

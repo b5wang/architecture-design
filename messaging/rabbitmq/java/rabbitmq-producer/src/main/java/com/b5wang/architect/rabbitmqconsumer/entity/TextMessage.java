@@ -1,4 +1,4 @@
-package com.b5wang.architect.rabbitmqproducer.entity;
+package com.b5wang.architect.rabbitmqconsumer.entity;
 
 
 import lombok.Data;
