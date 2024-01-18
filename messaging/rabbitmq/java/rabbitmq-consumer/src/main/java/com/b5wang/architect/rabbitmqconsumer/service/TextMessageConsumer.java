@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@RabbitListener(queues = RabbitMQConfig.QUEUE_NAME_TEXT_MESSAGE)
+@RabbitListener(queues = RabbitMQConfig.QUEUE_NAME_TEXT_MESSAGE, concurrency = "5-5")
 public class TextMessageConsumer {
 
     @RabbitHandler
