@@ -4,6 +4,7 @@ import com.b5wang.architect.rabbitmqconsumer.config.RabbitMQConfig;
 import com.b5wang.architect.rabbitmqconsumer.entity.TextMessage;
 import com.b5wang.architect.rabbitmqconsumer.entity.TextMessageBatch;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,9 @@ public class MsgController {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private FanoutExchange notificationFanoutExchange;
 
 
     @PostMapping(path = "/msg/textMessage")
@@ -46,6 +50,13 @@ public class MsgController {
             rabbitTemplate.convertAndSend(RabbitMQConfig.QUEUE_NAME_TEXT_MESSAGE,textMessage);
         }
         log.info("Processed TextMessageBatch - total: {}, msg: {}",textMessageBatch.getTotal(),textMessageBatch.getMsg());
+    }
+
+    @PostMapping(path = "/msg/notification")
+    public ResponseEntity<?> sendNotification(@RequestBody TextMessage notification){
+        log.info("Notification: {}",notification.getMsg());
+        rabbitTemplate.convertAndSend(notificationFanoutExchange.getName(),"",notification.getMsg());
+        return ResponseEntity.ok("DONE");
     }
 
 }

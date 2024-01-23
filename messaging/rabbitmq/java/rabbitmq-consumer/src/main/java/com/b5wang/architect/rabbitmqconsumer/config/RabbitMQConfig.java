@@ -1,7 +1,6 @@
 package com.b5wang.architect.rabbitmqconsumer.config;
 
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,7 +9,7 @@ public class RabbitMQConfig {
 
     public static final String QUEUE_NAME_TEXT_MESSAGE = "queue.textMessage";
 
-    public static final String EXCHANGE_NAME_SYSTEM_NOTIFICATION = "exchange.fanout.systemNotification";
+    public static final String EXCHANGE_NAME_NOTIFICATION = "exchange.fanout.notification";
 
     /**
      * Config a queue
@@ -21,10 +20,23 @@ public class RabbitMQConfig {
     }
 
     /**
+     * An anonymous queue binds to notification notification
+     * */
+    @Bean
+    public Queue notificationAnonymousQueue() {
+        return new AnonymousQueue();
+    }
+
+    /**
      * Define a fan-out exchange.
      * */
     @Bean
-    public FanoutExchange systemNotification(){
-        return new FanoutExchange(EXCHANGE_NAME_SYSTEM_NOTIFICATION);
+    public FanoutExchange notificationFanoutExchange(){
+        return new FanoutExchange(EXCHANGE_NAME_NOTIFICATION);
+    }
+
+    @Bean
+    public Binding bindingNotificationFanoutExchange(FanoutExchange notificationFanoutExchange, Queue notificationAnonymousQueue) {
+        return BindingBuilder.bind(notificationAnonymousQueue).to(notificationFanoutExchange);
     }
 }

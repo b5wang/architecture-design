@@ -10,7 +10,7 @@ public class RabbitMQConfig {
 
     public static final String QUEUE_NAME_TEXT_MESSAGE = "queue.textMessage";
 
-    public static final String EXCHANGE_NAME_SYSTEM_NOTIFICATION = "exchange.fanout.systemNotification";
+    public static final String EXCHANGE_NAME_NOTIFICATION = "exchange.fanout.notification";
 
     /**
      * Config a queue
@@ -24,7 +24,7 @@ public class RabbitMQConfig {
      * Define a fan-out exchange.
      * */
     @Bean
-    public FanoutExchange systemNotification(){
-        return new FanoutExchange(EXCHANGE_NAME_SYSTEM_NOTIFICATION);
+    public FanoutExchange notificationFanoutExchange(){
+        return new FanoutExchange(EXCHANGE_NAME_NOTIFICATION);
     }
 }
