@@ -26,7 +26,10 @@ public class RabbitMQConfig {
      * */
     @Bean
     public Queue notificationAnonymousQueue() {
-        return new AnonymousQueue();
+        log.info("Init notificationAnonymousQueue");
+        AnonymousQueue aq = new AnonymousQueue();
+        log.info("Init notificationAnonymousQueue - queue.name: {}", aq.getName());
+        return aq;
     }
 
     /**
@@ -38,7 +41,7 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding bindingNotificationFanoutExchange(FanoutExchange notificationFanoutExchange,Queue notificationAnonymousQueue) {
+    public Binding notificationFanoutExchangeBinding(FanoutExchange notificationFanoutExchange,Queue notificationAnonymousQueue) {
         log.info("Exchange binding anonymous queue");
         return BindingBuilder.bind(notificationAnonymousQueue).to(notificationFanoutExchange);
     }
