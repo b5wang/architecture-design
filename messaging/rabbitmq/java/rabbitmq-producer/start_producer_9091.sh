@@ -1,1 +1,3 @@
-#.jar --server.port=9081
+#!/bin/bash
+
+java -jar target/rabbitmq-producer.jar --server.port=9091

@@ -1,9 +1,11 @@
 package com.b5wang.architect.rabbitmqconsumer.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@Slf4j
 @Configuration
 public class RabbitMQConfig {
 
@@ -36,7 +38,8 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding bindingNotificationFanoutExchange(FanoutExchange notificationFanoutExchange, Queue notificationAnonymousQueue) {
+    public Binding bindingNotificationFanoutExchange(FanoutExchange notificationFanoutExchange,Queue notificationAnonymousQueue) {
+        log.info("Exchange binding anonymous queue");
         return BindingBuilder.bind(notificationAnonymousQueue).to(notificationFanoutExchange);
     }
 }
