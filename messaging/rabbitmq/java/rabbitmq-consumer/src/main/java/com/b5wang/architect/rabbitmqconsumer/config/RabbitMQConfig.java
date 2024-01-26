@@ -11,6 +11,8 @@ public class RabbitMQConfig {
 
     public static final String QUEUE_NAME_TEXT_MESSAGE = "queue.textMessage";
 
+    public static final String QUEUE_NAME_STRATEGY_NOTIFICATION = "queue.notification-";
+
     public static final String EXCHANGE_NAME_NOTIFICATION = "exchange.fanout.notification";
 
     /**
@@ -27,7 +29,7 @@ public class RabbitMQConfig {
     @Bean
     public Queue notificationAnonymousQueue() {
         log.info("Init notificationAnonymousQueue");
-        AnonymousQueue aq = new AnonymousQueue();
+        AnonymousQueue aq = new AnonymousQueue(new Base64UrlNamingStrategy(QUEUE_NAME_STRATEGY_NOTIFICATION));
         log.info("Init notificationAnonymousQueue - queue.name: {}", aq.getName());
         return aq;
     }
