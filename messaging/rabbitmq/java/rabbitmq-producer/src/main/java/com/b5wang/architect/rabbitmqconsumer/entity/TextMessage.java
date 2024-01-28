@@ -6,4 +6,5 @@ import lombok.Data;
 @Data
 public class TextMessage {
     private String msg;
+    private String region;
 }

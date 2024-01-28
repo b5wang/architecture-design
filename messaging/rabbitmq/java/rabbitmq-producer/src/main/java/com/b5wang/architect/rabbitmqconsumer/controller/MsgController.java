@@ -4,6 +4,7 @@ import com.b5wang.architect.rabbitmqconsumer.config.RabbitMQConfig;
 import com.b5wang.architect.rabbitmqconsumer.entity.TextMessage;
 import com.b5wang.architect.rabbitmqconsumer.entity.TextMessageBatch;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class MsgController {
 
     @Autowired
     private FanoutExchange notificationFanoutExchange;
+
+    @Autowired
+    private DirectExchange regionNotificationDirectExchange;
 
 
     @PostMapping(path = "/msg/textMessage")
@@ -59,4 +63,10 @@ public class MsgController {
         return ResponseEntity.ok("DONE");
     }
 
+    @PostMapping(path = "/msg/regionNotification")
+    public ResponseEntity<?> sendRegionNotification(@RequestBody TextMessage notification){
+        log.info("RegionNotification: msg={}, to={}",notification.getMsg(),notification.getRegion());
+        rabbitTemplate.convertAndSend(regionNotificationDirectExchange.getName(),notification.getRegion(),notification.getMsg());
+        return ResponseEntity.ok("DONE");
+    }
 }

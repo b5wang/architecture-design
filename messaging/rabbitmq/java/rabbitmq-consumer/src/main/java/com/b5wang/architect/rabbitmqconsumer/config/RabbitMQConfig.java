@@ -2,6 +2,7 @@ package com.b5wang.architect.rabbitmqconsumer.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,7 +14,14 @@ public class RabbitMQConfig {
 
     public static final String QUEUE_NAME_STRATEGY_NOTIFICATION = "queue.notification-";
 
+    public static final String QUEUE_NAME_STRATEGY_REGION_NOTIFICATION = "queue.regionNotification-";
+
     public static final String EXCHANGE_NAME_NOTIFICATION = "exchange.fanout.notification";
+
+    public static final String EXCHANGE_NAME_REGION_NOTIFICATION = "exchange.direct.region.notification";
+
+    @Value(value="{server.region}")
+    private String serverRegion;
 
     /**
      * Config a queue
@@ -34,8 +42,9 @@ public class RabbitMQConfig {
         return aq;
     }
 
-    /**
+    /** ----------------------------------------------------------------------------------------------------------------
      * Define a fan-out exchange.
+     * -----------------------------------------------------------------------------------------------------------------
      * */
     @Bean
     public FanoutExchange notificationFanoutExchange(){
@@ -44,7 +53,30 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding notificationFanoutExchangeBinding(FanoutExchange notificationFanoutExchange,Queue notificationAnonymousQueue) {
-        log.info("Exchange binding anonymous queue");
+        log.info("notificationAnonymousQueue binds to notificationFanoutExchange");
         return BindingBuilder.bind(notificationAnonymousQueue).to(notificationFanoutExchange);
+    }
+
+    /** ----------------------------------------------------------------------------------------------------------------
+     * Define a direct exchange.
+     * -----------------------------------------------------------------------------------------------------------------
+     * */
+    @Bean
+    public Queue regionNotificationAnonymousQueue() {
+        log.info("Init regionNotificationAnonymousQueue");
+        AnonymousQueue aq = new AnonymousQueue(new Base64UrlNamingStrategy(EXCHANGE_NAME_REGION_NOTIFICATION));
+        log.info("Init regionNotificationAnonymousQueue - queue.name: {}", aq.getName());
+        return aq;
+    }
+
+    @Bean
+    public DirectExchange regionNotificationDirectExchange(){
+        return new DirectExchange(EXCHANGE_NAME_REGION_NOTIFICATION);
+    }
+
+    @Bean
+    public Binding regionNotificationFanoutExchangeBinding(DirectExchange regionNotificationDirectExchange,Queue regionNotificationAnonymousQueue) {
+        log.info("regionNotificationAnonymousQueue binds to regionNotificationDirectExchange with region {}","");
+        return BindingBuilder.bind(regionNotificationAnonymousQueue).to(regionNotificationDirectExchange).with("");
     }
 }

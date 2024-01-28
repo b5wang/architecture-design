@@ -14,6 +14,7 @@ spring:
 
 server:
   port: 9080
+  region: Singapore
 
 logging:
   level:
