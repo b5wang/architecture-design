@@ -20,6 +20,8 @@ public class RabbitMQConfig {
 
     public static final String EXCHANGE_NAME_REGION_NOTIFICATION = "exchange.direct.region.notification";
 
+    public static final String EXCHANGE_NAME_APP_EVENT = "exchange.topic.app.event";
+
     @Value(value="${server.region}")
     private String serverRegion;
 
@@ -79,4 +81,15 @@ public class RabbitMQConfig {
         log.info("regionNotificationAnonymousQueue binds to regionNotificationDirectExchange with region {}",serverRegion);
         return BindingBuilder.bind(regionNotificationAnonymousQueue).to(regionNotificationDirectExchange).with(serverRegion);
     }
+
+    /** ----------------------------------------------------------------------------------------------------------------
+     * Define a topic exchange.
+     * -----------------------------------------------------------------------------------------------------------------
+     * */
+    @Bean
+    public TopicExchange appEventTopicExchange(){
+        return new TopicExchange(EXCHANGE_NAME_APP_EVENT);
+    }
+
+
 }

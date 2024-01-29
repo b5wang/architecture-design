@@ -1,11 +1,13 @@
 package com.b5wang.architect.rabbitmqconsumer.controller;
 
 import com.b5wang.architect.rabbitmqconsumer.config.RabbitMQConfig;
+import com.b5wang.architect.rabbitmqconsumer.entity.AppEvent;
 import com.b5wang.architect.rabbitmqconsumer.entity.TextMessage;
 import com.b5wang.architect.rabbitmqconsumer.entity.TextMessageBatch;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,9 @@ public class MsgController {
 
     @Autowired
     private DirectExchange regionNotificationDirectExchange;
+
+    @Autowired
+    private TopicExchange appEventTopicExchange;
 
 
     @PostMapping(path = "/msg/textMessage")
@@ -67,6 +72,14 @@ public class MsgController {
     public ResponseEntity<?> sendRegionNotification(@RequestBody TextMessage notification){
         log.info("RegionNotification: msg={}, to={}",notification.getMsg(),notification.getRegion());
         rabbitTemplate.convertAndSend(regionNotificationDirectExchange.getName(),notification.getRegion(),notification.getMsg());
+        return ResponseEntity.ok("DONE");
+    }
+
+    @PostMapping(path = "/msg/appEvent")
+    public ResponseEntity<?> sendAppEvent(@RequestBody AppEvent appEvent){
+        log.info("AppEvent: msg={}, to={}.{}.{}",appEvent.getMsg(),appEvent.getApp(),appEvent.getEvent(),appEvent.getPriority());
+        String routingKey = appEvent.getApp() + "." + appEvent.getEvent() + "." + appEvent.getPriority();
+        rabbitTemplate.convertAndSend(appEventTopicExchange.getName(),routingKey,appEvent.getMsg());
         return ResponseEntity.ok("DONE");
     }
 }
