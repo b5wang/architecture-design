@@ -20,7 +20,7 @@ public class RabbitMQConfig {
 
     public static final String EXCHANGE_NAME_REGION_NOTIFICATION = "exchange.direct.region.notification";
 
-    @Value(value="{server.region}")
+    @Value(value="${server.region}")
     private String serverRegion;
 
     /**
@@ -64,7 +64,7 @@ public class RabbitMQConfig {
     @Bean
     public Queue regionNotificationAnonymousQueue() {
         log.info("Init regionNotificationAnonymousQueue");
-        AnonymousQueue aq = new AnonymousQueue(new Base64UrlNamingStrategy(EXCHANGE_NAME_REGION_NOTIFICATION));
+        AnonymousQueue aq = new AnonymousQueue(new Base64UrlNamingStrategy(QUEUE_NAME_STRATEGY_REGION_NOTIFICATION + serverRegion + "-"));
         log.info("Init regionNotificationAnonymousQueue - queue.name: {}", aq.getName());
         return aq;
     }
@@ -76,7 +76,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding regionNotificationFanoutExchangeBinding(DirectExchange regionNotificationDirectExchange,Queue regionNotificationAnonymousQueue) {
-        log.info("regionNotificationAnonymousQueue binds to regionNotificationDirectExchange with region {}","");
-        return BindingBuilder.bind(regionNotificationAnonymousQueue).to(regionNotificationDirectExchange).with("");
+        log.info("regionNotificationAnonymousQueue binds to regionNotificationDirectExchange with region {}",serverRegion);
+        return BindingBuilder.bind(regionNotificationAnonymousQueue).to(regionNotificationDirectExchange).with(serverRegion);
     }
 }
