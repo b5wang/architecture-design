@@ -16,11 +16,16 @@ public class RabbitMQConfig {
 
     public static final String QUEUE_NAME_STRATEGY_REGION_NOTIFICATION = "queue.regionNotification-";
 
+    public static final String QUEUE_NAME_APP_EVENT = "queue.appEvent.";
+
     public static final String EXCHANGE_NAME_NOTIFICATION = "exchange.fanout.notification";
 
     public static final String EXCHANGE_NAME_REGION_NOTIFICATION = "exchange.direct.region.notification";
 
     public static final String EXCHANGE_NAME_APP_EVENT = "exchange.topic.app.event";
+
+    @Value(value = "${spring.application.name}")
+    private String appName;
 
     @Value(value="${server.region}")
     private String serverRegion;
@@ -90,6 +95,17 @@ public class RabbitMQConfig {
     public TopicExchange appEventTopicExchange(){
         return new TopicExchange(EXCHANGE_NAME_APP_EVENT);
     }
+
+    @Bean
+    public Queue appEventHighPriorityQueue(){
+        return new Queue(QUEUE_NAME_APP_EVENT + appName + ".*.high");
+    }
+
+    @Bean
+    public Queue appEventAllPriorityQueue(){
+        return new Queue(QUEUE_NAME_APP_EVENT + appName + ".*.*");
+    }
+
 
 
 }

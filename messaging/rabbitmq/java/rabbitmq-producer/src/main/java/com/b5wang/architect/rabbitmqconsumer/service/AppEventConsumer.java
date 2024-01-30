@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@RabbitListener(queues = "#{notificationAnonymousQueue.name}")
+@RabbitListener(queues = "#{appEventQueue.name}")
 public class AppEventConsumer {
 
     @RabbitHandler
