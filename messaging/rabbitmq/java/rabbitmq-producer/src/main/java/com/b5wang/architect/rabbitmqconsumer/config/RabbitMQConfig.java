@@ -61,8 +61,10 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding appEventTopicExchangeBinding(TopicExchange appEventTopicExchange, Queue appEventQueue){
-        String bindingKey = appName + ".#";
-        log.info("appEventQueue binds to appEventTopicExchange with routing key {}",bindingKey);
-        return BindingBuilder.bind(appEventQueue).to(appEventTopicExchange).with(bindingKey);
+        // rabbitmq-producer.<envent>.<priority>
+        // rabbitmq-producer.#
+        String routingKey = appName + ".#";
+        log.info("appEventQueue binds to appEventTopicExchange with routing key {}",routingKey);
+        return BindingBuilder.bind(appEventQueue).to(appEventTopicExchange).with(routingKey);
     }
 }

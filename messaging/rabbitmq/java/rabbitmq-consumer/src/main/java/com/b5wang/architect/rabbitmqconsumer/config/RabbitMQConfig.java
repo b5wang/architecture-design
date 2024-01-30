@@ -97,15 +97,25 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue appEventHighPriorityQueue(){
-        return new Queue(QUEUE_NAME_APP_EVENT + appName + ".*.high");
+    public Queue appEventPriorityQueue(){
+        return new Queue(QUEUE_NAME_APP_EVENT + appName + ".priority");
     }
 
     @Bean
-    public Queue appEventAllPriorityQueue(){
-        return new Queue(QUEUE_NAME_APP_EVENT + appName + ".*.*");
+    public Queue appEventAllQueue(){
+        return new Queue(QUEUE_NAME_APP_EVENT + appName + ".all");
     }
 
+    @Bean
+    public Binding appEventTopicExchangeBindingPriority(TopicExchange appEventTopicExchange,Queue appEventPriorityQueue){
+        String routingKey = appName + ".*.high";
+        return BindingBuilder.bind(appEventPriorityQueue).to(appEventTopicExchange).with(routingKey);
+    }
 
+    @Bean
+    public Binding appEventTopicExchangeBindingAll(TopicExchange appEventTopicExchange,Queue appEventAllQueue){
+        String routingKey = appName + ".*.*";
+        return BindingBuilder.bind(appEventAllQueue).to(appEventTopicExchange).with(routingKey);
+    }
 
 }
