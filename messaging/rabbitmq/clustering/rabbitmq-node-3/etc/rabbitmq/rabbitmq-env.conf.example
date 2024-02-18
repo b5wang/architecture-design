@@ -1,0 +1,11 @@
+# Example rabbitmq-env.conf file entries. Note that the variables
+# do not have the RABBITMQ_ prefix.
+#
+# Overrides node name
+RABBITMQ_NODENAME=bunny@myhost
+
+# Specifies new style config file location
+RABBITMQ_CONFIG_FILE=/etc/rabbitmq/rabbitmq.conf
+
+# Specifies advanced config file location
+RABBITMQ_ADVANCED_CONFIG_FILE=/etc/rabbitmq/advanced.config
