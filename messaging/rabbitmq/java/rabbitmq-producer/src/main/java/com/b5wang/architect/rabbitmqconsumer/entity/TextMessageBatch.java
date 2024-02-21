@@ -9,4 +9,6 @@ public class TextMessageBatch {
 
     private String msg;
 
+    private long delay;
+
 }

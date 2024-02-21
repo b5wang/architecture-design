@@ -2,8 +2,11 @@ spring:
   application:
     name: rabbitmq-producer
   rabbitmq:
-    host: localhost
-    port: 5672
+    # Connect rabbitmq single instance
+    # host: localhost
+    # port: 5672
+    # Connect rabbitmq cluster
+    addresses: localhost:5672,localhost:5673,localhost:5674
     username: demouser
     password: demouser
     # 开启发送确认

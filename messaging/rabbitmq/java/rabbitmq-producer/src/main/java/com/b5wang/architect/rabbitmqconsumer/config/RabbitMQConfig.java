@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @Configuration
 public class RabbitMQConfig {
@@ -21,6 +24,11 @@ public class RabbitMQConfig {
 
     public static final String EXCHANGE_NAME_APP_EVENT = "exchange.topic.app.event";
 
+    private static final Map QUEUE_ARGS = new HashMap<>();
+    static{
+        QUEUE_ARGS.put("x-queue-type", "quorum");
+        QUEUE_ARGS.put("x-queue-leader-locator", "client-local");
+    };
 
     @Value(value = "${spring.application.name}")
     private String appName;
@@ -30,7 +38,7 @@ public class RabbitMQConfig {
      * */
     @Bean
     public Queue textMessageQueue(){
-        return new Queue(QUEUE_NAME_TEXT_MESSAGE);
+        return new Queue(QUEUE_NAME_TEXT_MESSAGE, true, false, false, QUEUE_ARGS);
     }
 
     /**
@@ -56,7 +64,7 @@ public class RabbitMQConfig {
      * */
     @Bean
     public Queue appEventQueue(){
-        return new Queue(QUEUE_NAME_APP_EVENT + appName);
+        return new Queue(QUEUE_NAME_APP_EVENT + appName, true, false, false, QUEUE_ARGS);
     }
 
     @Bean
