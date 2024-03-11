@@ -11,9 +11,9 @@ public class IndexController {
         return "index";
     }
 
-    @GetMapping("/home")
+    @GetMapping("/public/singup")
     public String home(){
-        return "home";
+        return "public/signup";
     }
 
 }

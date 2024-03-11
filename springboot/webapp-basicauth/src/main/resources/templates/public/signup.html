@@ -1,0 +1,29 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Signup Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+    <body>
+        <form action="#" th:action="@{/signup}" th:object="${greeting}" method="post">
+            <p>Username:
+                <input type="text" th:field="*{username}" />
+            </p>
+            <p>Password:
+                <input type="text" th:field="*{password}" />
+            </p>
+            <p>Password:
+                <input type="text" th:field="*{password}" />
+            </p>
+            <p>
+                <select th:field="*{role}">
+                    <option th:value="'C'" th:text="Customer"></option>
+                    <option th:value="'A'" th:text="Administrator"></option>
+                </select>
+            </p>
+            <p>
+                <input type="submit" value="Submit" />
+                <input type="reset" value="Reset" />
+            </p>
+        </form>
+    </body>
+</html>
