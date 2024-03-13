@@ -1,9 +1,11 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Hello Security!</title>
+    <title>Index</title>
 </head>
 <body>
-<h1>Hello Security</h1>
-<a th:href="@{/logout}">Log Out</a>
+<h3>Home page</h3>
+    <a th:href="@{/customer/account}">View account information</a><br/>
+    <a th:href="@{/admin/management}">Management</a><br/>
+    <a th:href="@{/logout}">Log Out</a>
 </body>
 </html>
