@@ -37,3 +37,6 @@ redis-cli -u redis://username:password@host:port
 redis-cli -u redis://username:password@host:port/database
 redis-cli -tls -u redis://password@host:port
 
+# exit
+exit
+
