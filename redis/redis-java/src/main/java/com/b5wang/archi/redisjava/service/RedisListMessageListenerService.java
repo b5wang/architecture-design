@@ -20,7 +20,7 @@ public class RedisListMessageListenerService {
     @Autowired
     private RedisListMessageListener redisListMessageListener;
 
-    @PostConstruct
+    //@PostConstruct
     public void init(){
         log.info("Init redisListMessageListener!");
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();

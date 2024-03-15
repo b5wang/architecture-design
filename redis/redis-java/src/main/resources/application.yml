@@ -1,10 +1,15 @@
 server:
-  port: 9090
+  port: 8080
 
 spring:
   redis:
-    host: 127.0.0.1
-    port: 6379
+#    host: 127.0.0.1
+#    port: 6379
+    password: 111111
+    sentinel:
+      master: redis-sentinel
+      nodes: 127.0.0.1:26379,127.0.0.1:27379,127.0.0.1:28379
+      password: 111111
     database: 0
     lettuce:
       pool:

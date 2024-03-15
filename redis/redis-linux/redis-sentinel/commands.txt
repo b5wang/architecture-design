@@ -1,0 +1,23 @@
+1. Setup master-slave replication
+Change configuration
+- port
+- directories
+- replication
+
+Checking status
+./redis-cli -h 127.0.0.1 -p 6379 -a 111111 info replication
+./redis-cli -h 127.0.0.1 -p 7379 -a 111111 info replication
+./redis-cli -h 127.0.0.1 -p 8379 -a 111111 info replication
+
+ps -ef|grep redis
+
+
+2. Setup sentinel
+- port
+- directories
+- connect to master
+
+Checking sentinel status
+./redis-cli -h 127.0.0.1 -p 26379 -a 111111 info sentinel
+./redis-cli -h 127.0.0.1 -p 27379 -a 111111 info sentinel
+./redis-cli -h 127.0.0.1 -p 28379 -a 111111 info sentinel
