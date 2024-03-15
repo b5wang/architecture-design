@@ -17,7 +17,13 @@ ps -ef|grep redis
 - directories
 - connect to master
 
+* must create data folder in each node directory
+
 Checking sentinel status
 ./redis-cli -h 127.0.0.1 -p 26379 -a 111111 info sentinel
 ./redis-cli -h 127.0.0.1 -p 27379 -a 111111 info sentinel
 ./redis-cli -h 127.0.0.1 -p 28379 -a 111111 info sentinel
+
+./redis-cli -h 127.0.0.1 -p 26379 info sentinel
+./redis-cli -h 127.0.0.1 -p 27379 info sentinel
+./redis-cli -h 127.0.0.1 -p 28379 info sentinel

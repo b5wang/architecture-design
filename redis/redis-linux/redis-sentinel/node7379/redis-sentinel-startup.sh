@@ -1,2 +1,2 @@
 #!/bin/bash
-/Users/wangbo584/Workspace/applications/redis-stack-server-6.2.6/bin/redis-sentinel /Users/wangbo584/Workspace/applications/redis-sentinel/node7379/redis-sentinel.conf
+/opt/redis/redis-single/bin/redis-sentinel /opt/redis/redis-sentinel/node7379/redis-sentinel.conf
