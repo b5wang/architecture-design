@@ -27,3 +27,31 @@ Checking sentinel status
 ./redis-cli -h 127.0.0.1 -p 26379 info sentinel
 ./redis-cli -h 127.0.0.1 -p 27379 info sentinel
 ./redis-cli -h 127.0.0.1 -p 28379 info sentinel
+
+# -------------------------------------------------------------
+# General operations:
+# start
+cd /opt/redis/redis-sentinel/node6379
+./redis-startup.sh
+./redis-sentinel-startup.sh
+
+cd /opt/redis/redis-sentinel/node7379
+./redis-startup.sh
+./redis-sentinel-startup.sh
+
+cd /opt/redis/redis-sentinel/node8379
+./redis-startup.sh
+./redis-sentinel-startup.sh
+
+# -- stop
+cd /opt/redis/redis-sentinel/node8379
+./redis-stop.sh
+./redis-sentinel-stop.sh
+
+cd /opt/redis/redis-sentinel/node7379
+./redis-stop.sh
+./redis-sentinel-stop.sh
+
+cd /opt/redis/redis-sentinel/node6379
+./redis-stop.sh
+./redis-sentinel-stop.sh
