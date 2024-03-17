@@ -45,13 +45,13 @@ cd /opt/redis/redis-sentinel/node8379
 
 # -- stop
 cd /opt/redis/redis-sentinel/node8379
-./redis-stop.sh
 ./redis-sentinel-stop.sh
+./redis-stop.sh
 
 cd /opt/redis/redis-sentinel/node7379
-./redis-stop.sh
 ./redis-sentinel-stop.sh
+./redis-stop.sh
 
 cd /opt/redis/redis-sentinel/node6379
-./redis-stop.sh
 ./redis-sentinel-stop.sh
+./redis-stop.sh
