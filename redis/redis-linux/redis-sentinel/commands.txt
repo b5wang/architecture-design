@@ -55,3 +55,143 @@ cd /opt/redis/redis-sentinel/node7379
 cd /opt/redis/redis-sentinel/node6379
 ./redis-sentinel-stop.sh
 ./redis-stop.sh
+
+
+
+# -------------------------------------------------------------
+# Testing
+# 1. command
+b5wang@DESKTOP-B5WANG:/opt/redis/redis-single/bin$ ./redis-cli -h 127.0.0.1 -p 6379 -a 111111 info replication
+Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
+# Replication
+role:master
+connected_slaves:2
+slave0:ip=127.0.0.1,port=7379,state=online,offset=254220,lag=1
+slave1:ip=127.0.0.1,port=8379,state=online,offset=254359,lag=1
+master_failover_state:no-failover
+master_replid:b3cde8dcf376185160bf5bfb07ec69435457f4b4
+master_replid2:0000000000000000000000000000000000000000
+master_repl_offset:254498
+second_repl_offset:-1
+repl_backlog_active:1
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:1
+repl_backlog_histlen:254498
+
+
+./redis-cli -h 127.0.0.1 -p 7379 -a 111111 info replication
+b5wang@DESKTOP-B5WANG:/opt/redis/redis-single/bin$ ./redis-cli -h 127.0.0.1 -p 7379 -a 111111 info replication
+Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
+# Replication
+role:slave
+master_host:127.0.0.1
+master_port:6379
+master_link_status:up
+master_last_io_seconds_ago:0
+master_sync_in_progress:0
+slave_read_repl_offset:268496
+slave_repl_offset:268496
+slave_priority:100
+slave_read_only:1
+replica_announced:1
+connected_slaves:0
+master_failover_state:no-failover
+master_replid:b3cde8dcf376185160bf5bfb07ec69435457f4b4
+master_replid2:0000000000000000000000000000000000000000
+master_repl_offset:268496
+second_repl_offset:-1
+repl_backlog_active:1
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:1
+repl_backlog_histlen:268496
+
+
+b5wang@DESKTOP-B5WANG:/opt/redis/redis-single/bin$ ./redis-cli -h 127.0.0.1 -p 8379 -a 111111 info replication
+Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
+# Replication
+role:slave
+master_host:127.0.0.1
+master_port:6379
+master_link_status:up
+master_last_io_seconds_ago:1
+master_sync_in_progress:0
+slave_read_repl_offset:278421
+slave_repl_offset:278421
+slave_priority:100
+slave_read_only:1
+replica_announced:1
+connected_slaves:0
+master_failover_state:no-failover
+master_replid:b3cde8dcf376185160bf5bfb07ec69435457f4b4
+master_replid2:0000000000000000000000000000000000000000
+master_repl_offset:278421
+second_repl_offset:-1
+repl_backlog_active:1
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:2568
+repl_backlog_histlen:275854
+
+
+
+b5wang@DESKTOP-B5WANG:/opt/redis/redis-single/bin$ ./redis-cli -h 127.0.0.1 -p 26379 info sentinel
+# Sentinel
+sentinel_masters:1
+sentinel_tilt:0
+sentinel_running_scripts:0
+sentinel_scripts_queue_length:0
+sentinel_simulate_failure_flags:0
+master0:name=redis-sentinel,status=ok,address=127.0.0.1:6379,slaves=2,sentinels=3
+
+b5wang@DESKTOP-B5WANG:/opt/redis/redis-single/bin$ ./redis-cli -h 127.0.0.1 -p 27379 info sentinel
+# Sentinel
+sentinel_masters:1
+sentinel_tilt:0
+sentinel_running_scripts:0
+sentinel_scripts_queue_length:0
+sentinel_simulate_failure_flags:0
+master0:name=redis-sentinel,status=ok,address=127.0.0.1:6379,slaves=2,sentinels=3
+
+b5wang@DESKTOP-B5WANG:/opt/redis/redis-single/bin$ ./redis-cli -h 127.0.0.1 -p 28379 info sentinel
+# Sentinel
+sentinel_masters:1
+sentinel_tilt:0
+sentinel_running_scripts:0
+sentinel_scripts_queue_length:0
+sentinel_simulate_failure_flags:0
+master0:name=redis-sentinel,status=ok,address=127.0.0.1:6379,slaves=2,sentinels=3
+
+
+
+
+
+# Java connection, got
+2024-03-17T12:10:35.290+08:00 ERROR 19912 --- [redis-sentinel-java] [nio-8080-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis] with root cause
+
+io.lettuce.core.RedisCommandExecutionException: NOAUTH HELLO must be called with the client already authenticated, otherwise the HELLO AUTH <user> <pass> option can be used to authenticate the client and select the RESP protocol version at the same time
+	at io.lettuce.core.internal.ExceptionFactory.createExecutionException(ExceptionFactory.java:147) ~[lettuce-core-6.3.1.RELEASE.jar:6.3.1.RELEASE/12e6995]
+	at io.lettuce.core.internal.ExceptionFactory.createExecutionException(ExceptionFactory.java:116) ~[lettuce-core-6.3.1.RELEASE.jar:6.3.1.RELEASE/12e6995]
+	at io.lettuce.core.protocol.AsyncCommand.completeResult(AsyncCommand.java:120) ~[lettuce-core-6.3.1.RELEASE.jar:6.3.1.RELEASE/12e6995]
+	at io.lettuce.core.protocol.AsyncCommand.complete(AsyncCommand.java:111) ~[lettuce-core-6.3.1.RELEASE.jar:6.3.1.RELEASE/12e6995]
+	at io.lettuce.core.protocol.CommandHandler.complete(CommandHandler.java:745) ~[lettuce-core-6.3.1.RELEASE.jar:6.3.1.RELEASE/12e6995]
+	at io.lettuce.core.protocol.CommandHandler.decode(CommandHandler.java:680) ~[lettuce-core-6.3.1.RELEASE.jar:6.3.1.RELEASE/12e6995]
+	at io.lettuce.core.protocol.CommandHandler.channelRead(CommandHandler.java:597) ~[lettuce-core-6.3.1.RELEASE.jar:6.3.1.RELEASE/12e6995]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442) ~[netty-transport-4.1.107.Final.jar:4.1.107.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.107.Final.jar:4.1.107.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412) ~[netty-transport-4.1.107.Final.jar:4.1.107.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) ~[netty-transport-4.1.107.Final.jar:4.1.107.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440) ~[netty-transport-4.1.107.Final.jar:4.1.107.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.107.Final.jar:4.1.107.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) ~[netty-transport-4.1.107.Final.jar:4.1.107.Final]
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166) ~[netty-transport-4.1.107.Final.jar:4.1.107.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788) ~[netty-transport-4.1.107.Final.jar:4.1.107.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724) ~[netty-transport-4.1.107.Final.jar:4.1.107.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650) ~[netty-transport-4.1.107.Final.jar:4.1.107.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562) ~[netty-transport-4.1.107.Final.jar:4.1.107.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997) ~[netty-common-4.1.107.Final.jar:4.1.107.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[netty-common-4.1.107.Final.jar:4.1.107.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[netty-common-4.1.107.Final.jar:4.1.107.Final]
+	at java.base/java.lang.Thread.run(Thread.java:833) ~[na:na]
+
+Reference:
+https://stackoverflow.com/questions/64775186/why-am-i-getting-noauth-authentication-required-with-spring-boot
+https://www.herodotus.cn/others/question/redis.html#_3-io-lettuce-core-rediscommandexecutionexception-noauth-authentication-required
