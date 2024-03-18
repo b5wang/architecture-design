@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,8 +15,9 @@ public class CacheController {
     @Autowired
     private RedisTemplate<String,String> redisTemplate;
 
-    @PutMapping("/cache/kv")
+    @PostMapping("/cache/kv")
     public ResponseEntity<?> kv(@RequestParam String k,@RequestParam String v){
+        log.info("Request: {},{}",k,v);
         redisTemplate.opsForValue().set(k,v);
 
         String val = redisTemplate.boundValueOps(k).get();

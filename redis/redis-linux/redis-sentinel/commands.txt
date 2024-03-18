@@ -4,10 +4,14 @@ Change configuration
 - directories
 - replication
 
-Checking status
+# Checking status
 ./redis-cli -h 127.0.0.1 -p 6379 -a 111111 info replication
 ./redis-cli -h 127.0.0.1 -p 7379 -a 111111 info replication
 ./redis-cli -h 127.0.0.1 -p 8379 -a 111111 info replication
+# No password
+./redis-cli -h 127.0.0.1 -p 6379 info replication
+./redis-cli -h 127.0.0.1 -p 7379 info replication
+./redis-cli -h 127.0.0.1 -p 8379 info replication
 
 ps -ef|grep redis
 
@@ -193,5 +197,9 @@ io.lettuce.core.RedisCommandExecutionException: NOAUTH HELLO must be called with
 	at java.base/java.lang.Thread.run(Thread.java:833) ~[na:na]
 
 Reference:
-https://stackoverflow.com/questions/64775186/why-am-i-getting-noauth-authentication-required-with-spring-boot
 https://www.herodotus.cn/others/question/redis.html#_3-io-lettuce-core-rediscommandexecutionexception-noauth-authentication-required
+Configure password for redis sentinel service
+Added in sentinel.conf
+protected-mode yes
+requirepass 222222
+
