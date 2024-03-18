@@ -10,21 +10,17 @@ logging:
 spring:
   application:
     name: redis-sentinel-java
-  redis:
-#    password: 111111
-#    host: 127.0.0.1
-#    port: 6379
-    timeout: 5000
-    sentinel:
-      master: redis-ha
-      nodes:
-        - 127.0.0.1:26379
-        - 127.0.0.1:27379
-        - 127.0.0.1:28379
-    database: 0
-    lettuce:
-      pool:
-        max-idle: 8
-        max-active: 8
-        min-idle: 0
-      shutdown-timeout: 200ms
+  data:
+    redis:
+      sentinel:
+        master: redis-ha
+        nodes:
+          - 127.0.0.1:26379
+          - 127.0.0.1:27379
+          - 127.0.0.1:28379
+      lettuce:
+        pool:
+          max-idle: 8
+          max-active: 8
+          min-idle: 0
+        shutdown-timeout: 200ms
