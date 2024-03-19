@@ -12,6 +12,8 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 
 /**
+ * No need do any config for sentinel.
+ *
  * https://docs.spring.io/spring-data/redis/reference/redis/connection-modes.html
  * https://stackoverflow.com/questions/42088184/redis-sentinel-set-up-with-spring-boot
  *
