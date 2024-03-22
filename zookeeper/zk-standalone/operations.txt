@@ -1,0 +1,38 @@
+Reference: https://zookeeper.apache.org/doc/r3.9.2/zookeeperStarted.html
+
+1. Installation: 
+uncompress the tar
+
+2. Configure
+cd conf
+cp zoo_sample.cfg zoo.cfg
+
+Make most basic configuration
+---
+tickTime=2000
+# The number of ticks that the initial 
+# synchronization phase can take
+initLimit=10
+# The number of ticks that can pass between 
+# sending a request and getting an acknowledgement
+syncLimit=5
+dataDir=/Users/wangbo584/Workspace/applications/zookeeper-3.9.2/
+clientPort=2181
+---
+
+3. Start zookeeper
+cd bin
+./zkServer.sh start
+
+4. Login zookeeper
+./zkCli.sh -server 127.0.0.1:2181
+help
+ls /
+create /zk_test my_data
+ls /
+get /zookeeper
+get /zk_test
+set /zk_test junk
+get /zk_test
+delete /zk_test
+ls /
