@@ -12,7 +12,10 @@ spring:
     name: redis-sentinel-java
   data:
     redis:
+      password: 111111
+      database: 0
       sentinel:
+        password: 222222
         master: redis-ha
         nodes:
           - 127.0.0.1:26379
