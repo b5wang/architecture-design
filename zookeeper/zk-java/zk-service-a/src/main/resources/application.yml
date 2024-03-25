@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+logging:
+  level: DEBUG
+
+spring:
+  application:
+    name: zk-service-a
+  cloud:
+    service-registry:
+      auto-registration:
+        enabled: true
+    zookeeper:
+      discovery:
+        enabled: true
+        prefer-ip-address: true
+        instance-id: ${spring.cloud.client.hostname}:${server.port}
+      connect-string: 127.0.0.1:2181,127.0.0.1:3181,127.0.0.1:4181
