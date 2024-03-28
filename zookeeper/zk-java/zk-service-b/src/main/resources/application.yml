@@ -1,16 +1,16 @@
 server:
-  port: 8080
+  port: 9090
 
 logging:
   level: DEBUG
 
 spring:
   application:
-    name: zk-service-a
+    name: zk-service-b
   cloud:
-#    service-registry:
-#      auto-registration:
-#        enabled: true
+    service-registry:
+      auto-registration:
+        enabled: true
     zookeeper:
       discovery:
         enabled: true
