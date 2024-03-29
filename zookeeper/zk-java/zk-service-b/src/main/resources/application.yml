@@ -2,18 +2,11 @@ server:
   port: 9090
 
 logging:
-  level: DEBUG
+    root: DEBUG
 
 spring:
   application:
     name: zk-service-b
   cloud:
-    service-registry:
-      auto-registration:
-        enabled: true
     zookeeper:
-      discovery:
-        enabled: true
-        prefer-ip-address: true
-        instance-id: ${spring.cloud.client.hostname}:${server.port}
-      connect-string: 127.0.0.1:2181,127.0.0.1:3181,127.0.0.1:4181
+      connect-string: localhost:2181,localhost:3181,localhost:4181
