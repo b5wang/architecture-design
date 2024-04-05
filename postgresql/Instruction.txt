@@ -1,0 +1,77 @@
+# 1. Example of master / slave replication
+3 servers, 1 master/primary, 2 standby/secondary
+test1 192.168.1.11
+test2 192.168.1.12
+test3 192.168.1.13
+
+#############################################################
+# Master/primary configuration
+# test1 192.168.1.11
+Database path: /var/lib/pgsql/data
+Init logging path: /var/lib/pgsql/initdb_postgresql.log
+
+
+(1) postgresql.conf - postgresql configuration file
+# /var/lib/pgsql/data/postgresql.conf
+listen_addresses='192.168.1.11'
+wal_log_hints=on
+archive_mode=on
+archive_command='cp %p /var/lib/pgsql/pg_archive/%f'
+
+(2) pg_hba.conf - host-based authentication, for master to authenticate who will connect
+# /var/lib/pgsql/data/pg_hba.conf
+host replication replica 192.168.1.11/32 md5
+host replication replica 192.168.1.12/32 md5
+host replication replica 192.168.1.13/32 md5
+# http://www.postgres.cn/docs/9.4/auth-pg-hba-conf.html
+
+
+(3) recovery.conf - master does not need it.
+# /var/lib/pgsql/data/recovery.bak
+standby_mode=on
+primary_conninfo='host=192.168.1.11 port=5432 user=replica password=replica'
+
+
+(4) .pgpass - store passowords information to connect to other hosts
+# /var/lib/pgsql/.pgpass
+192.168.1.11:5432:replication:replica:replica
+192.168.1.12:5432:replication:replica:replica
+192.168.1.13:5432:replication:replica:replica
+
+chown 600 ~/.pgpass
+
+
+(5) pg_archive directory
+# pg_archive directory
+mkdir -p /var/lib/pgsql/pg_archive
+chown postgres:postgres /var/lib/pgsql/pg_archive
+
+
+# start database, and create synchronous user
+# replica / replica
+> psql
+postgres=# create role replica login replication encrypted password 'replica';
+CREATE ROLE
+postgres=# \q
+
+
+
+#############################################################
+# Standby/secondary configuration
+# test2 192.168.1.12
+# test3 192.168.1.13
+
+Get backup from master,
+rm -rf /var/lib/pgsql/data/*
+pg_basebackup -h 192.168.1.11 -p 5432 -U replica -F p -P -D /var/lib/pgsql/data/
+Password: replica
+
+
+(1) postgresql.conf
+(3) recovery.conf - master connection information
+(4) .pgpass
+(5) pg_archive directory
+
+
+
+
