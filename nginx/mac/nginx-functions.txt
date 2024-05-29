@@ -1,0 +1,55 @@
+Install nginx on Mac: 
+https://blog.csdn.net/Wjhsmart/article/details/115739192
+
+有关brew常用的指令如下：
+1. brew搜索软件命令： brew search nginx
+2. brew安装软件命令： brew install nginx
+3. brew卸载软件命令: brew uninstall nginx
+4. brew升级命令： sudo brew update
+5. 查看安装信息(比如查看安装目录等) sudo brew info nginx
+6. 查看已经安装的软件：brew list
+---
+brew help
+brew update
+brew list
+brew info nginx
+---
+nginx: stable 1.25.5 (bottled), HEAD
+Installed
+/usr/local/Cellar/nginx/1.23.1
+
+Docroot is: 
+/usr/local/var/www
+The default port has been set in 
+/usr/local/etc/nginx/nginx.conf to 8080 so that
+
+nginx will load all files in 
+/usr/local/etc/nginx/servers/.
+
+To start nginx now and restart at login:
+  brew services start nginx
+Or, if you don't want/need a background service you can just run:
+/usr/local/opt/nginx/bin/nginx -g daemon\ off\;
+---
+cd /usr/local/var/www              -- Docroot
+cd /usr/local/Cellar/nginx/1.23.1  -- nginx installed location
+cd /usr/local/etc/nginx/           -- config
+cd /usr/local/opt/nginx/bin/       -- command
+which nginx                        -- To confirm command location
+---
+nginx -help
+nginx -h
+nginx -s signal     : send signal to a master process: stop, quit, reopen, reload
+
+==================================================================
+Nginx functions:
+- Reverse proxy: 
+  https://blog.csdn.net/zxd1435513775/article/details/102508463
+  https://www.cnblogs.com/ysocean/p/9392908.html
+
+- Loan balancer:
+  https://www.cnblogs.com/ysocean/p/9392912.html
+  
+- Caching
+- Static and dynamic separate
+
