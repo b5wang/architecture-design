@@ -49,7 +49,96 @@ Nginx functions:
 
 - Loan balancer:
   https://www.cnblogs.com/ysocean/p/9392912.html
+
+- HTTPS configuration
   
+
 - Caching
 - Static and dynamic separate
+
+===================================================================
+Config HTTPS on nginx: 
+https://jackyu.cn/tech/nginx-selfsign-ssl-cert/
+
+# 1. Checking if installed http_ssl_module. If it is not installed, we need install it first.
+> nginx -V
+nginx version: nginx/1.23.1
+built by clang 13.1.6 (clang-1316.0.21.2.5)
+built with OpenSSL 1.1.1q  5 Jul 2022
+TLS SNI support enabled
+configure arguments: 
+--prefix=/usr/local/Cellar/nginx/1.23.1 
+--sbin-path=/usr/local/Cellar/nginx/1.23.1/bin/nginx 
+--with-cc-opt='-I/usr/local/opt/pcre2/include -I/usr/local/opt/openssl@1.1/include' 
+--with-ld-opt='-L/usr/local/opt/pcre2/lib -L/usr/local/opt/openssl@1.1/lib' 
+--conf-path=/usr/local/etc/nginx/nginx.conf 
+--pid-path=/usr/local/var/run/nginx.pid 
+--lock-path=/usr/local/var/run/nginx.lock 
+--http-client-body-temp-path=/usr/local/var/run/nginx/client_body_temp 
+--http-proxy-temp-path=/usr/local/var/run/nginx/proxy_temp 
+--http-fastcgi-temp-path=/usr/local/var/run/nginx/fastcgi_temp 
+--http-uwsgi-temp-path=/usr/local/var/run/nginx/uwsgi_temp 
+--http-scgi-temp-path=/usr/local/var/run/nginx/scgi_temp 
+--http-log-path=/usr/local/var/log/nginx/access.log 
+--error-log-path=/usr/local/var/log/nginx/error.log 
+--with-compat --with-debug 
+--with-http_addition_module 
+--with-http_auth_request_module 
+--with-http_dav_module 
+--with-http_degradation_module 
+--with-http_flv_module 
+--with-http_gunzip_module 
+--with-http_gzip_static_module 
+--with-http_mp4_module 
+--with-http_random_index_module 
+--with-http_realip_module 
+--with-http_secure_link_module 
+--with-http_slice_module 
+--with-http_ssl_module           # Here http_ssl_module
+--with-http_stub_status_module 
+--with-http_sub_module 
+--with-http_v2_module 
+--with-ipv6 --with-mail 
+--with-mail_ssl_module 
+--with-pcre 
+--with-pcre-jit 
+--with-stream 
+--with-stream_realip_module 
+--with-stream_ssl_module 
+--with-stream_ssl_preread_module
+
+# 2. Create self signed ssl certificate
+     https://jackyu.cn/tech/nginx-selfsign-ssl-cert/
+-- (1) Create private key
+openssl genrsa -out server.key 2048
+
+-- (2) Create certificate signing request
+openssl req -new -key server.key -out server.csr
+# Common name must be domain url www.localhost.com
+
+-- (3) Create certificate
+openssl x509 -req -in server.csr -signkey server.key -out server.crt
+
+Now we got 3 files:
+www.localhost.com.key - private key
+www.localhost.com.csr - certificate signing request 
+www.localhost.com.crt - certificate
+# 3. enable ssl, and configure certificate and key in nginx
+server {
+    listen <port> ssl;
+    ssl_certificate     <path>/www.localhost.com.crt
+    ssl_certificate_key <path>/www.localhost.com.key
+    ...
+}
+
+# 4. solving problems
+cannot load certificate key "/usr/local/etc/nginx/ssl/www.localhost.com.key": 
+PEM_read_bio_PrivateKey() failed (SSL: 
+error:2807106B:UI routines:UI_process:processing error:while reading strings 
+error:0906406D:PEM routines:PEM_def_callback:problems getting password 
+error:0907B068:PEM routines:PEM_read_bio_PrivateKey:bad password read)
+
+I remove the password of key, can't comnfirm the root cause from:
+https://www.liaoxuefeng.com/article/990311924891552
+
 
