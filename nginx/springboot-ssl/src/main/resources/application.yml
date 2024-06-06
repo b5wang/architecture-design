@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    org: INFO
+
+spring:
+  application:
+    name: webapp-basicauth
+#  security:
+#    user:
+#      name: admin
+#      password: admin
