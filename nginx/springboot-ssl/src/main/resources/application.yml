@@ -1,5 +1,14 @@
 server:
   port: 8080
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    # The path to the keystore containing the certificate
+    key-store: classpath:server.jks
+    # The password used to generate the certificate
+    key-store-password: 123456
+    # The alias mapped to the certificate
+    key-alias: 1
 
 logging:
   level:
@@ -7,7 +16,9 @@ logging:
 
 spring:
   application:
-    name: webapp-basicauth
+    name: springboot-ssl
+
+
 #  security:
 #    user:
 #      name: admin
