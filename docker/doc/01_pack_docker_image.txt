@@ -1,0 +1,7 @@
+# How to write docker file?
+
+
+# mvn clean install 
+
+
+# docker build
