@@ -1,0 +1,22 @@
+##########################################################
+# wsl ip address ?
+In windows command prompt or power shell
+> wsl hostname -I
+
+##########################################################
+# Checker wsl2 version
+In windows command prompt or power shell
+> wsl --list --verbose
+Example:
+C:\Users\b5wang>wsl --list --verbose
+  NAME              STATE           VERSION
+* Ubuntu-22.04      Running         2
+  docker-desktop    Running         2
+C:\Users\b5wang>wsl --version
+WSL version: 1.2.5.0
+Kernel version: 5.15.90.1
+WSLg version: 1.0.51
+MSRDC version: 1.2.3770
+Direct3D version: 1.608.2-61064218
+DXCore version: 10.0.25131.1002-220531-1700.rs-onecore-base2-hyp
+Windows version: 10.0.22631.3737

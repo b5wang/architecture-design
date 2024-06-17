@@ -1,4 +1,8 @@
+##########################################################
+# For JAVA application
+# 1. Spring boot: https://spring.io/guides/gs/spring-boot-docker
 # How to write docker file?
+Choose a base docker image,
 
 
 # mvn clean install 
