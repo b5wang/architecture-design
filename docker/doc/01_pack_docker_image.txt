@@ -1,11 +1,16 @@
 ##########################################################
 # For JAVA application
 # 1. Spring boot: https://spring.io/guides/gs/spring-boot-docker
-# How to write docker file?
+# (1) Make a dockerfile. How to write docker file?
 Choose a base docker image,
+FROM -- specify base image
+WORKDIR -- set working directory for other instructions
+COPY or ADD
+# (2) mvn clean install 
+# (3) docker build
+> docker buildx build --file "./docker/Dockerfile" --tag "ebank/ebank-business:0.1" .
 
-
-# mvn clean install 
-
-
-# docker build
+> docker[enter to show all commands]
+> docker [command] --help
+$ (4) deploy to minikube 
+minikube has kubectl

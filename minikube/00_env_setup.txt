@@ -47,4 +47,9 @@ Current context is now "default"
 > kubectl apply --filename=svc-kubernetes-dashboard-loadbalancer.yaml
 > kubectl apply --f svc-kubernetes-dashboard-loadbalancer.yaml
 > minikube tunnel
-> 
+
+##---
+> kubectl delete deployment hello-minikube1 --namespace=default
+> kubectl delete service hello-minikube1 --namespace=default
+> kubectl delete services kubernetes-dashboard-loadbalancer --namespace=kubernetes-dashboard
+
