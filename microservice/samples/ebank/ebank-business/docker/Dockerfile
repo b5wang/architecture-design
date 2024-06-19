@@ -6,6 +6,6 @@ COPY ./target/ebank-business.jar /opt/ebank-business
 
 EXPOSE 9001
 
-ENTRYPOINT ["bash","java -jar ebank-business.jar"]
+ENTRYPOINT ["java","-jar","/opt/ebank-business/ebank-business.jar"]
 
 CMD []

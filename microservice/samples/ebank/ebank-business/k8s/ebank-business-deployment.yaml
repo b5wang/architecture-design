@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ebank-business-deployment
+  labels:
+    app: ebank-business
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ebank-business
+  template:
+    metadata:
+      labels:
+        app: ebank-business
+    spec:
+      containers:
+        - name: ebank-business
+          image: ebank-business:v0.1
+          ports:
+            - containerPort: 9001
