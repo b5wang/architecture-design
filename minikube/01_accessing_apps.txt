@@ -1,3 +1,24 @@
 https://minikube.sigs.k8s.io/docs/handbook/accessing/
-- ModePort
+- Service
+
+- NodePort
+> minikube service <service-name> --namespace=<namespace> --url
+> minikube service ebank-business --url
+Example:
+% minikube service ebank-business --url
+😿  service default/ebank-business has no node port
+http://127.0.0.1:52738
+❗  Because you are using a Docker driver on darwin, the terminal needs to be open to run it.
+
 - LoadBalancer
+> minikube tunnel
+Example:
+> kubectl get svc --namespace=kubernetes-dashboard
+NAME                                TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)           AGE
+dashboard-metrics-scraper           ClusterIP      10.110.193.240   <none>        8000/TCP          24h
+kubernetes-dashboard                ClusterIP      10.96.66.248     <none>        80/TCP            24h
+kubernetes-dashboard-loadbalancer   LoadBalancer   10.100.242.73    127.0.0.1     30000:30280/TCP   21h
+> kubectl get svc kubernetes-dashboard-loadbalancer --namespace=kubernetes-dashboard
+NAME                                TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)           AGE
+kubernetes-dashboard-loadbalancer   LoadBalancer   10.100.242.73   127.0.0.1     30000:30280/TCP   21h
+

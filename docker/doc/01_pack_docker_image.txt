@@ -17,6 +17,22 @@ minikube has kubectl
 > kubectl apply -f ./k8s/ebank-business-deployment.yaml
 > kubectl delete deployment ebank-business-deployment
 # (5) deploy a service to access the application
+# Internally service
 > kubectl apply -f ./k8s/ebank-business-service.yaml
+> minikube service ebank-business --url
+# Node port
+> kubectl apply -f ./k8s/ebank-business-nodeport.yaml
+> minikube service ebank-business-nodeport --url
+http://127.0.0.1:53197
+❗  Because you are using a Docker driver on darwin, the terminal needs to be open to run it.
+> kubectl get svc ebank-business-nodeport
+NAME                      TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+ebank-business-nodeport   NodePort   10.96.208.117   <none>        9001:31001/TCP   5m8s
 
+> kubectl apply -f ./k8s/ebank-business-loadbalancer.yaml
+> kubectl get svc ebank-business-loadbalancer
+NAME                          TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)           AGE
+ebank-business-loadbalancer   LoadBalancer   10.101.214.26   127.0.0.1     31002:31002/TCP   8m4s
+# Delete useless service
+> kubectl delete service ebank-business-loadbalancer ebank-business-nodeport
 
