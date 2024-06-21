@@ -13,9 +13,17 @@ COPY or ADD
 # > docker [command] --help
 Using minikube image registry: https://minikube.sigs.k8s.io/docs/handbook/pushing/
 # (4) deploy to minikube 
-minikube has kubectl
+# (4.a) minikube has kubectl
 > kubectl apply -f ./k8s/ebank-business-deployment.yaml
 > kubectl delete deployment ebank-business-deployment
+# (4.b) deploy with helm
+> helm create ebank-business
+# Testing helm chart
+> helm lint ./ebank-business
+# Show settings of helm chart
+> helm template ./ebank-business
+> helm install --name ebank-business ./ebank-business
+
 # (5) deploy a service to access the application
 # Internally service
 > kubectl apply -f ./k8s/ebank-business-service.yaml
