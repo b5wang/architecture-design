@@ -1,8 +1,14 @@
+#=======
 # 1. Install latest docker desktop
 # 2. Install latest virtual box -- In macOS 13+, minikube does not support virtual box, should use docker
 # 3. Install latest Minikube
+# MacOS
 > curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64
 > sudo install minikube-darwin-amd64 /usr/local/bin/minikube
+# Linux
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+
 # Also can use following command to run kubectl
 > minikube kubectl -- <kubectl options>
 ##-----------------------------------------------------------

@@ -9,6 +9,7 @@ COPY or ADD
 # (2) mvn clean install 
 # (3) docker build
 > docker buildx build --file ./docker/Dockerfile --tag ebank-business:v0.1 .
+> docker buildx build --file docker/Dockerfile --tag ebank-business:v0.1 .
 # > docker[enter to show all commands]
 # > docker [command] --help
 Using minikube image registry: https://minikube.sigs.k8s.io/docs/handbook/pushing/
@@ -18,6 +19,7 @@ Make image to minikube's docker image registry
 - Pull from remote image registry
 - Copy image from local image to minikube's 
 - Set local image registry is minikube's image registry
+  Run > eval $(minikube docker-env)
 #********************
 
 # (4) deploy to minikube 
