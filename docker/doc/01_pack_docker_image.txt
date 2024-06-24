@@ -12,21 +12,33 @@ COPY or ADD
 # > docker[enter to show all commands]
 # > docker [command] --help
 Using minikube image registry: https://minikube.sigs.k8s.io/docs/handbook/pushing/
+
+#********************
+Make image to minikube's docker image registry
+- Pull from remote image registry
+- Copy image from local image to minikube's 
+- Set local image registry is minikube's image registry
+#********************
+
 # (4) deploy to minikube 
 # (4.a) minikube has kubectl
 > kubectl apply -f ./k8s/ebank-business-deployment.yaml
+> kubectl apply -f k8s/ebank-business-deployment.yaml
 > kubectl delete deployment ebank-business-deployment
+> kubectl delete -n default deployment ebank-business
 # (4.b) deploy with helm
 > helm create ebank-business
 # Testing helm chart
 > helm lint ./ebank-business
 # Show settings of helm chart
 > helm template ./ebank-business
-> helm install --name ebank-business ./ebank-business
+> helm install ebank-business helm/ebank-business
+> helm upgrade -i  ebank-business helm/ebank-business
 
 # (5) deploy a service to access the application
 # Internally service
 > kubectl apply -f ./k8s/ebank-business-service.yaml
+> kubectl apply -f k8s/ebank-business-service.yaml
 > minikube service ebank-business --url
 # Node port
 > kubectl apply -f ./k8s/ebank-business-nodeport.yaml
@@ -43,4 +55,99 @@ NAME                          TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(
 ebank-business-loadbalancer   LoadBalancer   10.101.214.26   127.0.0.1     31002:31002/TCP   8m4s
 # Delete useless service
 > kubectl delete service ebank-business-loadbalancer ebank-business-nodeport
+> kubectl delete services kubernetes-dashboard-loadbalancer --namespace=kubernetes-dashboard
+> kubectl delete -n default service ebank-business
 
+
+##########################################################
+> kubectl api-resources
+> kubectl describe pods ebank-business-deployment-69547869f-44qzt
+Name:             ebank-business-deployment-69547869f-44qzt
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Mon, 24 Jun 2024 14:44:12 +0800
+Labels:           app=ebank-business
+                  pod-template-hash=69547869f
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.22
+IPs:
+  IP:           10.244.0.22
+Controlled By:  ReplicaSet/ebank-business-deployment-69547869f
+Containers:
+  ebank-business:
+    Container ID:   docker://090e694775991a28dee35cf9e285d63a4c5307c0a1a74c47ed8000f73d7282b1
+    Image:          ebank-business:v0.1
+    Image ID:       docker://sha256:d1a99ced846631a6d365fa59c8063fc26d75405f4b51d4b884bf9e5034f0a76f
+    Port:           9001/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Mon, 24 Jun 2024 14:44:13 +0800
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-h2jct (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  kube-api-access-h2jct:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  19m   default-scheduler  Successfully assigned default/ebank-business-deployment-69547869f-44qzt to minikube
+  Normal  Pulled     19m   kubelet            Container image "ebank-business:v0.1" already present on machine
+  Normal  Created    19m   kubelet            Created container ebank-business
+  Normal  Started    19m   kubelet            Started container ebank-business
+
+
+
+#---------------------------------------------------------
+wangbo584@wangbo584 ebank-business % kubectl describe deployments  ebank-business-deployment 
+Name:                   ebank-business-deployment
+Namespace:              default
+CreationTimestamp:      Mon, 24 Jun 2024 14:44:12 +0800
+Labels:                 app=ebank-business
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=ebank-business
+Replicas:               3 desired | 3 updated | 3 total | 3 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=ebank-business
+  Containers:
+   ebank-business:
+    Image:        ebank-business:v0.1
+    Port:         9001/TCP
+    Host Port:    0/TCP
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   ebank-business-deployment-69547869f (3/3 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  17m   deployment-controller  Scaled up replica set ebank-business-deployment-69547869f to 3
+#---------------------------------------------------------

@@ -1,6 +1,7 @@
 # Default values for ebank-business.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+fullname: ebank-business-deployment
 
 replicaCount: 3
 
@@ -74,11 +75,11 @@ resources: {}
 
 livenessProbe:
   httpGet:
-    path: /
+    path: /probe/liveness
     port: http
 readinessProbe:
   httpGet:
-    path: /
+    path: /probe/readiness
     port: http
 
 autoscaling:

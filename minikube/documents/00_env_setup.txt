@@ -54,5 +54,3 @@ Download binary command https://github.com/helm/helm/releases
 ##---
 > kubectl delete deployment hello-minikube1 --namespace=default
 > kubectl delete service hello-minikube1 --namespace=default
-> kubectl delete services kubernetes-dashboard-loadbalancer --namespace=kubernetes-dashboard
-

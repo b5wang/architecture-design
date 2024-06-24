@@ -1,0 +1,39 @@
+https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+- liveness
+  Let kubelet know when to restart a container
+- readiness
+  Let kubelet know when a container is ready to start accepting traffic.
+  If the pod workload is too heavy, using readiness probe to stop accepting traffic.
+- startup 
+  The kubelet uses startup probes to know when a container application has started.
+#-----------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ebank-business-deployment
+  labels:
+    app: ebank-business
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ebank-business
+  template:
+    metadata:
+      labels:
+        app: ebank-business
+    spec:
+      containers:
+        - name: ebank-business
+          image: ebank-business:v0.1
+          ports:
+            - containerPort: 9001
+          startupProbe:
+          livenessProbe:
+          readinessProbe: 
+#-----------------------------------------------------------------------
+Using kubectl describe pods <pod_name>, can see,
+  Containers:
+   ebank-business:
+    Liveness:     http-get http://:http/ delay=0s timeout=1s period=10s #success=1 #failure=3
+    Readiness:    http-get http://:http/ delay=0s timeout=1s period=10s #success=1 #failure=3
