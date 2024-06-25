@@ -17,6 +17,9 @@ Using minikube image registry: https://minikube.sigs.k8s.io/docs/handbook/pushin
 #********************
 Make image to minikube's docker image registry
 - Pull from remote image registry
+  Push docker image to docker hub first
+
+
 - Copy image from local image to minikube's 
 - Set local image registry is minikube's image registry
   Run > eval $(minikube docker-env)
@@ -31,7 +34,7 @@ Make image to minikube's docker image registry
 # (4.b) deploy with helm
 > helm create ebank-business
 # Testing helm chart
-> helm lint ./ebank-business
+> helm lint ./ebank-business  # helm 3 no need this step
 # Show settings of helm chart
 > helm template ./ebank-business
 > helm install ebank-business helm/ebank-business

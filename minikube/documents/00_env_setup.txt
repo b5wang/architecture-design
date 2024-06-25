@@ -1,5 +1,8 @@
 #=======
 # 1. Install latest docker desktop
+> docker COMMAND --help
+> docker -v
+> docker --version
 # 2. Install latest virtual box -- In macOS 13+, minikube does not support virtual box, should use docker
 # 3. Install latest Minikube
 # MacOS
@@ -8,13 +11,23 @@
 # Linux
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
-
+> minikube <command> --help
+> minikube version
 # Also can use following command to run kubectl
 > minikube kubectl -- <kubectl options>
+> kubectl <command> --help
+> kubectl version
 ##-----------------------------------------------------------
+# my mac
 > minikube start --cpus=8 --driver=docker --memory=8g
-# my desktop 24cpu 32G rem
+# using fixed ip
+> minikube start --cpus=8 --driver=docker --memory=8g --static-ip=192.168.0.99
+> minikube start --cpus 8 --driver docker --memory 8g --static-ip 10.0.0.2
+# my window desktop 24cpu 32G rem
 > minikube start --cpus=16 --driver=docker --memory=16g
+> minikube start --cpus=16 --driver=docker --memory=14g
+> minikube start --cpus=16 --driver=docker --memory=16g --static-ip 10.0.0.2
+> minkube ip
 ##---
 C:\Users\b5wang>minikube start --cpus=16 --driver=docker --memory=16g
 W1113 23:22:28.100002   22300 main.go:291] Unable to resolve the current Docker CLI context "default": context "default": context not found: open C:\Users\b5wang\.docker\contexts\meta\37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f\meta.json: The system cannot find the path specified.
@@ -40,7 +53,6 @@ Download binary command https://github.com/helm/helm/releases
 > helm help
 
 # 6. Access application deployed on minikube 
-> minikube start --cpus=16 --driver=docker --memory=14g
 ## Using docker must use tunnel
 > minikube tunnel
 ## Install kubernetes with minikube
