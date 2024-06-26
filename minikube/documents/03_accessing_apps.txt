@@ -3,7 +3,7 @@ https://minikube.sigs.k8s.io/docs/handbook/accessing/
 
 - NodePort
 > minikube service <service-name> --namespace=<namespace> --url
-> minikube service ebank-business --url
+> minikube service ebank-business -n <namespace> --url
 Example:
 % minikube service ebank-business --url
 😿  service default/ebank-business has no node port

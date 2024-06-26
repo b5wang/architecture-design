@@ -37,8 +37,9 @@ W1113 23:22:28.100002   22300 main.go:291] Unable to resolve the current Docker 
 ❌  Exiting due to MK_USAGE: Docker Desktop has only 15877MB memory but you specified 16384MB
 
 # 4. Install latest kubectl
-Install manually
+Install manually: https://kubernetes.io/docs/tasks/tools/
 > curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/amd64/kubectl"
+> curl -LO "https://dl.k8s.io/release/v1.30.0/bin/darwin/amd64/kubectl"
 > sudo install kubectl /usr/local/bin/kubectl
 or
 > minikube kubectl

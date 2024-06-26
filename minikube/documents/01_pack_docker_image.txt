@@ -16,13 +16,43 @@ Using minikube image registry: https://minikube.sigs.k8s.io/docs/handbook/pushin
 
 #********************
 Make image to minikube's docker image registry
-- Pull from remote image registry
+- (1) Push image to common docker image registry, and pull it from minikube docker daemon
   Push docker image to docker hub first
+> docker image ls
+REPOSITORY                    TAG       IMAGE ID       CREATED         SIZE
+ebank-business                v0.1      b2bfea52956c   23 hours ago    495MB
+gcr.io/k8s-minikube/kicbase   v0.0.40   c6cc01e60919   11 months ago   1.19GB
+# Usage:  docker image ls [OPTIONS] [REPOSITORY[:TAG]]
+> docker image ls ebank-business:v0.1
+> docker login --username <username> --password <password>
+# Tag image one more time, make the repository name follow docker hub structure
+> docker tag ebank-business:v0.1 b5wang/ebank-business:v0.1
+> docker push b5wang/ebank-business:v0.1
+The push refers to repository [docker.io/b5wang/ebank-business]
+7a253a587f52: Pushed 
+9eb1cd121860: Pushed 
+dc9fa3d8b576: Pushed 
+27ee19dc88f2: Pushed 
+c8dd97366670: Pushed 
+v0.1: digest: sha256:17e7c11e6abe34079d00a9324e4b8efd390a3dc1b64dc0fe16ba4c4b655feb7c size: 1373
+# Go to minikube's own docker daemon
+> minikube ssh
+> docker pull b5wang/ebank-business:v0.1
+> docker tag b5wang/ebank-business:v0.1 ebank-business:v0.1
+# After this step, minikube directly get image 
 
+- (2) Copy image from local image to minikube's 
+> minikube --help
+> minikube image --help
+> minikube image load --help
+> minikube image load ebank-business:v0.1
+# It would take some time if image size is big
+> minikube ssh
+> docker image ls
 
-- Copy image from local image to minikube's 
-- Set local image registry is minikube's image registry
-  Run > eval $(minikube docker-env)
+- (3) Set local image registry is minikube's image registry
+> eval $(minikube docker-env)
+# Minikube can directly access these images
 #********************
 
 # (4) deploy to minikube 

@@ -15,7 +15,7 @@ spec:
         app: ebank-business
     spec:
       containers:
-        - name: ebank-business
-          image: ebank-business:v0.1
-          ports:
-            - containerPort: 9001
+      - name: ebank-business
+        image: ebank-business:v0.1
+        ports:
+        - containerPort: 9001
