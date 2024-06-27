@@ -2,8 +2,44 @@ Reference: https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordp
 Objectives:
     Create PersistentVolumeClaims and PersistentVolumes
     Create a kustomization.yaml with
-        a Secret generator
-        MySQL resource configs
-        WordPress resource configs
-    Apply the kustomization directory by kubectl apply -k ./
+        a Secret generator - kustomization.yaml
+        MySQL resource configs - mysql-deployment.yaml
+    Apply the kustomization directory by 
+        > kubectl apply -k ./
     Clean up
+        > kubectl delete -k ./
+
+#---------------------------------------------------
+# 1, Error: secret "mysql-pass" not found
+Refer to secret.yaml.
+Don't know why kustomization.yaml, the name is not correct.
+
+# 2. delete
+> kubectl delete deployments mysql
+> kubectl delete persistentvolume pvc-57ec3201-6367-4e95-8e52-d41f601d7db6
+
+# 3. Login mysql from container
+socket=/var/run/mysqld/mysqld.sock
+mysql -u root -p -S /var/run/mysqld/mysql.sock
+ERROR: ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysql.sock' (2)
+---
+All possible paths of mysql configuration
+/etc/my.cnf
+datadir=/var/lib/mysql
+socket=/var/run/mysqld/mysqld.sock
+Go to datadir, found there is mysqld.sock file, to use this file.
+mysql.sock -> /var/run/mysqld/mysqld.sock
+> mysql -u root -p -S /var/lib/mysql/mysql.sock
+# Done
+# Check users and set remote access for them
+select user from mysql.user;
+describe mysql.user;
+select user,host from mysql.user;
+select current_user();
+
+
+
+
+
+
+

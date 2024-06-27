@@ -1,4 +1,6 @@
 secretGenerator:
+# Cause Error: secret "mysql-pass" not found, at pod
+# is not exact the name, mysql-pass-kkcc2b926b
 - name: mysql-pass
   literals:
   - password=123456
