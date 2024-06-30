@@ -38,10 +38,15 @@ W1113 23:22:28.100002   22300 main.go:291] Unable to resolve the current Docker 
 
 # 4. Install latest kubectl
 Install manually: https://kubernetes.io/docs/tasks/tools/
+Mac: https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/
 > curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/amd64/kubectl"
 > curl -LO "https://dl.k8s.io/release/v1.30.0/bin/darwin/amd64/kubectl"
-> sudo install kubectl /usr/local/bin/kubectl
-or
+> sudo install kubectl /usr/local/bin/kubectl && rm kubectl
+Linux: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+> curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+> curl -LO "https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl"
+> sudo install kubectl /usr/local/bin/kubectl && rm kubectl
+# Internatively using minikube
 > minikube kubectl
 C:\Users\b5wang>docker context use default
 default
