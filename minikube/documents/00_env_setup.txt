@@ -51,12 +51,20 @@ Linux: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
 C:\Users\b5wang>docker context use default
 default
 Current context is now "default"
+#------------------------------------------------------------------------
+# Enable some addons
+> minikube addons enable dashboard
+#  Some dashboard features require the metrics-server addon. To enable all features please run:
+> minikube addons enable metrics-server
+> minikube 
+#------------------------------------------------------------------------
 
 # 5. Install helm: https://helm.sh/docs/intro/install/
+# helm3
 Download binary command https://github.com/helm/helm/releases
 > tar -zxvf helm-v3.15.2-darwin-amd64.tar.gz
-> sudo mv darwin-amd64/helm /usr/local/bin/helm
-> helm help
+> sudo install linux-amd64/helm /usr/local/bin/helm && rm linux-amd64/helm
+> helm --help
 
 # 6. Access application deployed on minikube 
 ## Using docker must use tunnel
@@ -78,3 +86,8 @@ Download binary command https://github.com/helm/helm/releases
 ##---
 > kubectl delete deployment hello-minikube1 --namespace=default
 > kubectl delete service hello-minikube1 --namespace=default
+
+# 7. Login docker hub registry
+> docker login --help
+> docker login --username <username> --password <password> <server_url>
+
