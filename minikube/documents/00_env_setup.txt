@@ -29,7 +29,7 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-a
 > minikube start --cpus=16 --driver=docker --memory=16g --static-ip 10.0.0.2
 > minkube ip
 ##---
-C:\Users\b5wang>minikube start --cpus=16 --driver=docker --memory=16g
+> minikube start --cpus=16 --driver=docker --memory=16g
 W1113 23:22:28.100002   22300 main.go:291] Unable to resolve the current Docker CLI context "default": context "default": context not found: open C:\Users\b5wang\.docker\contexts\meta\37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f\meta.json: The system cannot find the path specified.
 😄  minikube v1.32.0 on Microsoft Windows 11 Home 10.0.22621.2428 Build 22621.2428
 ✨  Using the docker driver based on user configuration
@@ -82,7 +82,8 @@ Download binary command https://github.com/helm/helm/releases
 > kubectl apply --filename=svc-kubernetes-dashboard-loadbalancer.yaml
 > kubectl apply --f svc-kubernetes-dashboard-loadbalancer.yaml
 > minikube tunnel
-
+OR
+> minikube service kubernetes-dashboard --namespace=kubernetes-dashboard --url
 ##---
 > kubectl delete deployment hello-minikube1 --namespace=default
 > kubectl delete service hello-minikube1 --namespace=default
@@ -90,4 +91,39 @@ Download binary command https://github.com/helm/helm/releases
 # 7. Login docker hub registry
 > docker login --help
 > docker login --username <username> --password <password> <server_url>
+
+
+##==========================================================================
+Minikube start error
+> minikube start
+😄  minikube v1.33.1 on Ubuntu 22.04 (amd64)
+✨  Using the docker driver based on existing profile
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🚜  Pulling base image v0.0.44 ...
+🔄  Restarting existing docker container for "minikube" ...
+🤦  StartHost failed, but will try again: provision: get ssh host-port: get port 22 for "minikube": docker container inspect -f "'{{(index (index .NetworkSettings.Ports "22/tcp") 0).HostPort}}'" minikube: exit status 1
+stdout:
+
+
+stderr:
+template parsing error: template: :1:4: executing "" at <index (index .NetworkSettings.Ports "22/tcp") 0>: error calling index: reflect: slice index out of range
+
+🏃  Updating the running docker "minikube" container ...
+🐳  Preparing Kubernetes v1.30.0 on Docker 26.1.1 ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image docker.io/kubernetesui/dashboard:v2.7.0
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+    ▪ Using image registry.k8s.io/metrics-server/metrics-server:v0.7.1
+    ▪ Using image docker.io/kubernetesui/metrics-scraper:v1.0.8
+💡  Some dashboard features require the metrics-server addon. To enable all features please run:
+
+        minikube addons enable metrics-server
+
+🌟  Enabled addons: storage-provisioner, dashboard, metrics-server, default-storageclass
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
+Solution:
+> docker system prune
+> minikube delete
+> minikube start --driver=docker
 
