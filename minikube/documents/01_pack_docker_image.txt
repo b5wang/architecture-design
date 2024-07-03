@@ -49,6 +49,7 @@ v0.1: digest: sha256:17e7c11e6abe34079d00a9324e4b8efd390a3dc1b64dc0fe16ba4c4b655
 # It would take some time if image size is big
 > minikube ssh
 > docker image ls
+> exit
 
 - (3) Set local image registry is minikube's image registry
 > eval $(minikube docker-env)

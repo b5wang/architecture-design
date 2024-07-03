@@ -1,0 +1,29 @@
+# Pass properties to springboot application
+# Java code:
+    @Value("${test.arg1}")
+    private String arg1;
+
+    @Value("${test.arg2}")
+    private String arg2;
+
+
+(1) application.yaml
+test:
+  arg1: haha
+  arg2: hehe
+
+(2) java options in command line
+--
+java -jar target/ebank-business.jar --test.arg1=hehe2 --test.arg2=haha2
+
+or
+-D, it must be before jar file
+java -jar -Dtest.arg1=hehe3 -Dtest.arg2=haha3 target/ebank-business.jar
+
+
+(3) Dockerfile
+ENTRYPOINT ["java","-jar","/opt/ebank-business/ebank-business.jar"]
+CMD []
+
+(4) kubernetes yaml
+

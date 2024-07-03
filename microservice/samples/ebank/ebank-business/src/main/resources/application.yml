@@ -3,3 +3,6 @@ server:
 logging:
   level:
     org: INFO
+test:
+  arg1: haha
+  arg2: hehe

@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ebank-business-deployment
+  name: ebank-business
   labels:
     app: ebank-business
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: ebank-business
@@ -17,5 +17,6 @@ spec:
       containers:
       - name: ebank-business
         image: ebank-business:v0.1
+        args: ["--test.arg1=hehe5","--test.arg2=haha5"]
         ports:
         - containerPort: 9001
