@@ -1,0 +1,24 @@
+# https://paulswithers.github.io/blog/2021/12/12/docker-java
+# entrypoint or CMD
+
+How Started 	                            Process / Sub-Process 	SIGTERM Received By
+ENTRYPOINT, java -jar 	                    Sub-Process 	        Shell process
+ENTRYPOINT, exec java -jar 	                Process 	            Java JVM
+CMD [“/bin/bash”], java -jar 	            Sub-Process 	        bash
+CMD [“/bin/bash”], exec java -jar 	        Process 	            Java JVM
+CMD [“java”] 	                            Process 	            Java JVM
+Google Jib image 	                        Process 	            Java JVM
+Lightweight init system, e.g. “dumb-init” 	Process 	            Java JVM
+
+
+#==========================================================================
+docker@minikube:~$ docker exec aa418db3a744 /usr/bin/ps
+OCI runtime exec failed: exec failed: unable to start container process: exec: "/usr/bin/ps": stat /usr/bin/ps: no such file or directory: unknown
+OCI runtime exec failed: exec failed: unable to start container process: exec: "<command>": stat /usr/bin/ps: no such file or directory: unknown
+
+# How to know Linux os version
+# OS Edition
+> cat /etc/os-release
+> lsb_release -a
+# Linux version
+> cat /proc/version
