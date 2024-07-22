@@ -1,0 +1,6 @@
+# Show current working branch
+git rev-parse --abbrev-ref HEAD
+cat .git/HEAD
+git branch
+
+# Login with a user
