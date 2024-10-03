@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.b5wang: DEBUG
+
+spring:
+  application:
+    name: ratelimiting
+
+#  security:
+#    user:
+#      name: admin
+#      password: admin
