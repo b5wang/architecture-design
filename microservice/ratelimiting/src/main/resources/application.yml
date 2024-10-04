@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 9090
 
 logging:
   level:
@@ -9,6 +9,11 @@ logging:
 spring:
   application:
     name: ratelimiting
+
+csp:
+  sentinel:
+    dashboard:
+      server: localhost:8081
 
 #  security:
 #    user:
