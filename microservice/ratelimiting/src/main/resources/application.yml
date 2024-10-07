@@ -10,11 +10,10 @@ spring:
   application:
     name: ratelimiting
 
-csp:
-  sentinel:
-    dashboard:
-      server: localhost:8081
-
+#csp:
+#  sentinel:
+#    dashboard:
+#      server: localhost:8081
 #  security:
 #    user:
 #      name: admin
