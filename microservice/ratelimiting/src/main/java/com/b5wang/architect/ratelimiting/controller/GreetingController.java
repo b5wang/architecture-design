@@ -34,7 +34,7 @@ public class GreetingController {
     @GetMapping("/byebye")
     public ResponseEntity<String> sayByebye(){
         log.info("Call bye bye");
-        
+
         // 匀速执行10次
         for(int i=0; i < 10; i++){
             while(true) {
