@@ -127,3 +127,8 @@ Solution:
 > minikube delete
 > minikube start --driver=docker
 
+
+#=======
+Install minikube with virtualbox
+
+
