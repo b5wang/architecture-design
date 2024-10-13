@@ -1,4 +1,5 @@
 #=======
+# In Mac or Linux, docker+minikube
 # 1. Install latest docker desktop
 > docker COMMAND --help
 > docker -v
@@ -129,6 +130,101 @@ Solution:
 
 
 #=======
-Install minikube with virtualbox
+# In Windows, virtualbox+minikue
+# Install minikube with virtualbox
+# 1. Install virtualbox
+https://www.virtualbox.org/wiki/Downloads
+# 2. upgrade powershell to 7.4
+https://learn.microsoft.com/en-us/powershell/scripting/whats-new/migrating-from-windows-powershell-51-to-powershell-7?view=powershell-7.4
+- Powershell is designed for cloud, on-premises, and hybrid systems.
+- Powershell 7 and 5.1 will be running side by side. They will coexist.
+- PowerShell 7 is built on .NET 6.0. Windows PowerShell 5.1 is built on .NET Framework 4.x. 
+  The differences between the .NET versions might affect the behavior of your scripts, especially if you are calling .NET method directly.
+- Separate pathes. Install locations by version:
+  Windows PowerShell 5.1: $env:WINDIR\System32\WindowsPowerShell\v1.0
+  PowerShell 6.x: $env:ProgramFiles\PowerShell\6
+  PowerShell 7: $env:ProgramFiles\PowerShell\7
+- Different executable names, 5 is powershell.ext, above 6 is pwsh.exe
+- Separate profiles
+- PowerShell 7 compatibility with Windows PowerShell 5.1 modules
+- PowerShell Remoting. 
+  + WS-Management remoting
+  + SSH-based remoting
+# Install PowerShell using Winget (recommended)
+https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4#winget
+# 3. Determine your version of PowerShell
+$PSVersionTable
+# 4. Change terminal uses powershell 7
+Backup PS5: %SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe
+PS7: C:\Program Files\PowerShell\7\pwsh.exe
+
+# 5. Install minikube in windows
+https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download
+---
+Output folder: D:\Tools\Cloud\Kubernetes\Minikube
+Extract: minikube.exe... 100%
+Extract: logo.ico... 100%
+Extract: update_path.ps1... 100%
+Created uninstaller: D:\Tools\Cloud\Kubernetes\Minikube\uninstall.exe
+Create folder: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Kubernetes
+Create shortcut: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Kubernetes\Minikube.lnk
+Path needs to be added.
+Checking if the given path already exists or not
+The given path was not found. Adding it now.
+Path has been added successfully.
+Completed
+
+# 6. Terminal starts with administrator
+> minikube start --cpus=16 --memory=16g --driver=virtualbox
+
+PS C:\Users\Admin> minikube start --cpus=16 --memory=16g --driver=virtualbox
+😄  minikube v1.34.0 on Microsoft Windows 11 Home 10.0.22631.4317 Build 22631.4317
+✨  Using the virtualbox driver based on user configuration
+💿  Downloading VM boot image ...
+    > minikube-v1.34.0-amd64.iso....:  65 B / 65 B [---------] 100.00% ? p/s 0s
+    > minikube-v1.34.0-amd64.iso:  333.55 MiB / 333.55 MiB  100.00% 15.44 MiB p
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+💾  Downloading Kubernetes v1.31.0 preload ...
+    > preloaded-images-k8s-v18-v1...:  326.69 MiB / 326.69 MiB  100.00% 18.29 M
+🔥  Creating virtualbox VM (CPUs=16, Memory=16384MB, Disk=20000MB) ...
+🤦  StartHost failed, but will try again: creating host: create: precreate: This computer doesn't have VT-X/AMD-v enabled. Enabling it in the BIOS is mandatory
+🔥  Creating virtualbox VM (CPUs=16, Memory=16384MB, Disk=20000MB) ...
+😿  Failed to start virtualbox VM. Running "minikube delete" may fix it: creating host: create: precreate: This computer doesn't have VT-X/AMD-v enabled. Enabling it in the BIOS is mandatory
+
+❌  Exiting due to HOST_VIRT_UNAVAILABLE: Failed to start host: creating host: create: precreate: This computer doesn't have VT-X/AMD-v enabled. Enabling it in the BIOS is mandatory
+💡  Suggestion: Virtualization support is disabled on your computer. If you are running minikube within a VM, try '--driver=docker'. Otherwise, consult your systems BIOS manual for how to enable virtualization.
+🍿  Related issues:
+    ▪ https://github.com/kubernetes/minikube/issues/3900
+    ▪ https://github.com/kubernetes/minikube/issues/4730
+Solution: https://stackoverflow.com/questions/70813386/how-to-resolve-minikube-start-error-this-computer-doesnt-have-vt-x-amd-v-enab
+
+> minikube start --cpus=16 --memory=16g --driver=virtualbox --no-vtx-check
+PS C:\Users\b5wang> minikube start --cpus=16 --memory=16g --driver=virtualbox --no-vtx-check
+😄  minikube v1.34.0 on Microsoft Windows 11 Home 10.0.22631.4317 Build 22631.4317
+✨  Using the virtualbox driver based on user configuration
+💿  Downloading VM boot image ...
+    > minikube-v1.34.0-amd64.iso....:  65 B / 65 B [---------] 100.00% ? p/s 0s
+    > minikube-v1.34.0-amd64.iso:  333.55 MiB / 333.55 MiB  100.00% 20.71 MiB p
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+💾  Downloading Kubernetes v1.31.0 preload ...
+    > preloaded-images-k8s-v18-v1...:  326.69 MiB / 326.69 MiB  100.00% 20.59 M
+🔥  Creating virtualbox VM (CPUs=16, Memory=16384MB, Disk=20000MB) ...
+🔥  Deleting "minikube" in virtualbox ...
+🤦  StartHost failed, but will try again: creating host: create host timed out in 360.000000 seconds
+😿  Failed to start virtualbox VM. Running "minikube delete" may fix it: error loading existing host. Please try running [minikube delete], then run [minikube start] again: filestore "minikube": open C:\Users\b5wang\.minikube\machines\minikube\config.json: The system cannot find the file specified.
+
+❌  Exiting due to GUEST_NOT_FOUND: Failed to start host: error loading existing host. Please try running [minikube delete], then run [minikube start] again: filestore "minikube": open C:\Users\b5wang\.minikube\machines\minikube\config.json: The system cannot find the file specified.
+💡  Suggestion: minikube is missing files relating to your guest environment. This can be fixed by running 'minikube delete'
+🍿  Related issue: https://github.com/kubernetes/minikube/issues/9130
+
+
+
+
+
+
+
+
+ 
+
 
 
