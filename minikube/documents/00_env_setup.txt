@@ -198,6 +198,8 @@ PS C:\Users\Admin> minikube start --cpus=16 --memory=16g --driver=virtualbox
     ▪ https://github.com/kubernetes/minikube/issues/4730
 Solution: https://stackoverflow.com/questions/70813386/how-to-resolve-minikube-start-error-this-computer-doesnt-have-vt-x-amd-v-enab
 
+
+
 > minikube start --cpus=16 --memory=16g --driver=virtualbox --no-vtx-check
 PS C:\Users\b5wang> minikube start --cpus=16 --memory=16g --driver=virtualbox --no-vtx-check
 😄  minikube v1.34.0 on Microsoft Windows 11 Home 10.0.22631.4317 Build 22631.4317
@@ -216,6 +218,27 @@ PS C:\Users\b5wang> minikube start --cpus=16 --memory=16g --driver=virtualbox --
 ❌  Exiting due to GUEST_NOT_FOUND: Failed to start host: error loading existing host. Please try running [minikube delete], then run [minikube start] again: filestore "minikube": open C:\Users\b5wang\.minikube\machines\minikube\config.json: The system cannot find the file specified.
 💡  Suggestion: minikube is missing files relating to your guest environment. This can be fixed by running 'minikube delete'
 🍿  Related issue: https://github.com/kubernetes/minikube/issues/9130
+
+
+
+# In virtualbox, File --> Reference --> Expert --> General --> Default machine folder: C:\Users\b5wang\VirtualBox VMs, manually create this folder
+PS C:\Users\b5wang> minikube start --cpus=16 --memory=16g --driver=virtualbox --no-vtx-check --static-ip=192.168.0.100
+😄  minikube v1.34.0 on Microsoft Windows 11 Home 10.0.22631.4317 Build 22631.4317
+✨  Using the virtualbox driver based on user configuration
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🔥  Creating virtualbox VM (CPUs=16, Memory=16384MB, Disk=20000MB) ...
+❗  Failing to connect to https://registry.k8s.io/ from inside the minikube VM
+💡  To pull new external images, you may need to configure a proxy: https://minikube.sigs.k8s.io/docs/reference/networking/proxy/
+🐳  Preparing Kubernetes v1.31.0 on Docker 27.2.0 ...
+    ▪ Generating certificates and keys ...
+    ▪ Booting up control plane ...
+    ▪ Configuring RBAC rules ...
+🔗  Configuring bridge CNI (Container Networking Interface) ...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+🔎  Verifying Kubernetes components...
+🌟  Enabled addons: storage-provisioner, default-storageclass
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
 
 
 
