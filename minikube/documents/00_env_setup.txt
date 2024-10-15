@@ -30,7 +30,7 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-a
 > minikube start --cpus=16 --driver=docker --memory=16g --static-ip 10.0.0.2
 > minkube ip
 ##---
-> minikube start --cpus=16 --driver=docker --memory=16g
+> minikube start --driver=docker --memory=16g --cpus=16
 W1113 23:22:28.100002   22300 main.go:291] Unable to resolve the current Docker CLI context "default": context "default": context not found: open C:\Users\b5wang\.docker\contexts\meta\37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f\meta.json: The system cannot find the path specified.
 😄  minikube v1.32.0 on Microsoft Windows 11 Home 10.0.22621.2428 Build 22621.2428
 ✨  Using the docker driver based on user configuration
@@ -198,8 +198,6 @@ PS C:\Users\Admin> minikube start --cpus=16 --memory=16g --driver=virtualbox
     ▪ https://github.com/kubernetes/minikube/issues/4730
 Solution: https://stackoverflow.com/questions/70813386/how-to-resolve-minikube-start-error-this-computer-doesnt-have-vt-x-amd-v-enab
 
-
-
 > minikube start --cpus=16 --memory=16g --driver=virtualbox --no-vtx-check
 PS C:\Users\b5wang> minikube start --cpus=16 --memory=16g --driver=virtualbox --no-vtx-check
 😄  minikube v1.34.0 on Microsoft Windows 11 Home 10.0.22631.4317 Build 22631.4317
@@ -219,8 +217,6 @@ PS C:\Users\b5wang> minikube start --cpus=16 --memory=16g --driver=virtualbox --
 💡  Suggestion: minikube is missing files relating to your guest environment. This can be fixed by running 'minikube delete'
 🍿  Related issue: https://github.com/kubernetes/minikube/issues/9130
 
-
-
 # In virtualbox, File --> Reference --> Expert --> General --> Default machine folder: C:\Users\b5wang\VirtualBox VMs, manually create this folder
 PS C:\Users\b5wang> minikube start --cpus=16 --memory=16g --driver=virtualbox --no-vtx-check --static-ip=192.168.0.100
 😄  minikube v1.34.0 on Microsoft Windows 11 Home 10.0.22631.4317 Build 22631.4317
@@ -238,8 +234,17 @@ PS C:\Users\b5wang> minikube start --cpus=16 --memory=16g --driver=virtualbox --
 🔎  Verifying Kubernetes components...
 🌟  Enabled addons: storage-provisioner, default-storageclass
 🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+------------------------------------------------------------------------------------------------------------------------
+Finally decide using powershell 7 + minikube + docker in Windows 11. Using virtualbox has too much uncertainty, wasting time!!!
 
 
+
+#=======
+# In Windows, minikue + docker + powershell
+- Update powershell to 7
+- Install docker desktop
+- Install minikube (+kubernetes)
+> 
 
 
 
