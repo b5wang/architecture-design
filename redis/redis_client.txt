@@ -1,0 +1,1 @@
+# Windows: https://github.com/qishibo/AnotherRedisDesktopManager

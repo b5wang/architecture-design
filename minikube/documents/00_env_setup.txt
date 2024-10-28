@@ -54,6 +54,7 @@ default
 Current context is now "default"
 #------------------------------------------------------------------------
 # Enable some addons
+> minikube addons list
 > minikube addons enable dashboard
 #  Some dashboard features require the metrics-server addon. To enable all features please run:
 > minikube addons enable metrics-server
@@ -72,8 +73,6 @@ Download binary command https://github.com/helm/helm/releases
 > minikube tunnel
 ## Install kubernetes with minikube
 > minikube kubectl
-> minikube addons list
-> minikube addons enable dashboard
 > minikube dashboard
 > minikube --help
 > minikube <command> --help
@@ -246,7 +245,11 @@ Finally decide using powershell 7 + minikube + docker in Windows 11. Using virtu
 - Install minikube (+kubernetes)
 > 
 
-
+#=======
+# Re-install minikube
+> docker system prune 
+> minikube delete --all --purge
+> minikube start --driver=docker --memory=16g --cpus=16
 
 
 

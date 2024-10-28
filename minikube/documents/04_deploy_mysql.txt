@@ -8,7 +8,10 @@ Objectives:
         > kubectl apply -k ./
     Clean up
         > kubectl delete -k ./
-
+Deploy MySQL
+# modify secretKeyRef to the exact name in kubernetes
+> kubectl apply -f mysql-deployment.yaml
+> kubectl apply -f mysql-svc-loadbalancer.yaml
 #---------------------------------------------------
 # 1, Error: secret "mysql-pass" not found
 Refer to secret.yaml.
@@ -16,7 +19,10 @@ Don't know why kustomization.yaml, the name is not correct.
 
 # 2. delete
 > kubectl delete deployments mysql
+# ? 
 > kubectl delete persistentvolume pvc-57ec3201-6367-4e95-8e52-d41f601d7db6
+# Try directly run this
+> kubectl delete -n default persistentvolumeclaim mysql-pv-claim
 
 # 3. Login mysql from container
 socket=/var/run/mysqld/mysqld.sock
