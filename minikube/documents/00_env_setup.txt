@@ -20,17 +20,20 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-a
 > kubectl version
 ##-----------------------------------------------------------
 # my mac
-> minikube start --cpus=8 --driver=docker --memory=8g
+> minikube start --cpus=8 --memory=8g --driver=docker
 # using fixed ip
-> minikube start --cpus=8 --driver=docker --memory=8g --static-ip=192.168.0.99
-> minikube start --cpus 8 --driver docker --memory 8g --static-ip 10.0.0.2
+> minikube start --cpus=8 --memory=8g --driver=docker --static-ip=192.168.0.99
+> minikube start --cpus 8 --memory=8g --driver docker --static-ip 10.0.0.2
 # my window desktop 24cpu 32G rem
-> minikube start --cpus=16 --driver=docker --memory=16g
-> minikube start --cpus=16 --driver=docker --memory=14g
-> minikube start --cpus=16 --driver=docker --memory=16g --static-ip 10.0.0.2
+> minikube start --cpus=16 --memory=16g --driver=docker
+> minikube start --cpus=16 --memory=14g --driver=docker
+> minikube start --cpus=16 --memory=16g --driver=docker --static-ip 10.0.0.2
 > minkube ip
 ##---
-> minikube start --driver=docker --memory=16g --cpus=16
+> minikube start --cpus=16 --memory=16g
+
+
+ --driver=docker
 W1113 23:22:28.100002   22300 main.go:291] Unable to resolve the current Docker CLI context "default": context "default": context not found: open C:\Users\b5wang\.docker\contexts\meta\37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f\meta.json: The system cannot find the path specified.
 😄  minikube v1.32.0 on Microsoft Windows 11 Home 10.0.22621.2428 Build 22621.2428
 ✨  Using the docker driver based on user configuration
@@ -234,22 +237,65 @@ PS C:\Users\b5wang> minikube start --cpus=16 --memory=16g --driver=virtualbox --
 🌟  Enabled addons: storage-provisioner, default-storageclass
 🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
 ------------------------------------------------------------------------------------------------------------------------
-Finally decide using powershell 7 + minikube + docker in Windows 11. Using virtualbox has too much uncertainty, wasting time!!!
+Minikube start error:
+# 1. StartHost failed, but will try again: provision: get ssh host-port: get port 22 for "minikube": docker container inspect -f "'{{(index (index .NetworkSettings.Ports "22/tcp") 0).HostPort}}'" minikube: exit status 1
+b5wang@DESKTOP-B5WANG:~$ minikube start
+😄  minikube v1.34.0 on Ubuntu 22.04 (amd64)
+    ▪ KUBECONFIG=/home/b5wang/.kube/config
+✨  Using the docker driver based on existing profile
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🚜  Pulling base image v0.0.45 ...
+🔄  Restarting existing docker container for "minikube" ...
+🤦  StartHost failed, but will try again: provision: get ssh host-port: get port 22 for "minikube": docker container inspect -f "'{{(index (index .NetworkSettings.Ports "22/tcp") 0).HostPort}}'" minikube: exit status 1
+stdout:
 
 
+stderr:
+template parsing error: template: :1:4: executing "" at <index (index .NetworkSettings.Ports "22/tcp") 0>: error calling index: reflect: slice index out of range
 
-#=======
-# In Windows, minikue + docker + powershell
-- Update powershell to 7
-- Install docker desktop
-- Install minikube (+kubernetes)
-> 
+🏃  Updating the running docker "minikube" container ...
+🐳  Preparing Kubernetes v1.31.0 on Docker 27.2.0 ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+    ▪ Using image registry.k8s.io/metrics-server/metrics-server:v0.7.2
+    ▪ Using image docker.io/kubernetesui/dashboard:v2.7.0
+    ▪ Using image docker.io/kubernetesui/metrics-scraper:v1.0.8
+💡  Some dashboard features require the metrics-server addon. To enable all features please run:
 
-#=======
-# Re-install minikube
-> docker system prune 
-> minikube delete --all --purge
-> minikube start --driver=docker --memory=16g --cpus=16
+        minikube addons enable metrics-server
+
+🌟  Enabled addons: metrics-server, storage-provisioner, default-storageclass, dashboard
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
+Solution: https://stackoverflow.com/questions/62201371/minikube-start-command-gives-template-parsing-error
+Add
+export KUBECONFIG=~/.kube/config
+> docker system prune
+> minikube delete
+> minikube start --memory=16g --cpus=16 --driver=docker
+b5wang@DESKTOP-B5WANG:~$ minikube delete
+🔥  Deleting "minikube" in docker ...
+🔥  Removing /home/b5wang/.minikube/machines/minikube ...
+💀  Removed all traces of the "minikube" cluster.
+b5wang@DESKTOP-B5WANG:~$ minikube start --memory=16g --cpus=16 --driver=docker
+😄  minikube v1.34.0 on Ubuntu 22.04 (amd64)
+    ▪ KUBECONFIG=/home/b5wang/.kube/config
+✨  Using the docker driver based on user configuration
+📌  Using Docker driver with root privileges
+❗  For an improved experience it's recommended to use Docker Engine instead of Docker Desktop.
+Docker Engine installation instructions: https://docs.docker.com/engine/install/#server
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🚜  Pulling base image v0.0.45 ...
+🔥  Creating docker container (CPUs=16, Memory=16384MB) ...
+🐳  Preparing Kubernetes v1.31.0 on Docker 27.2.0 ...
+    ▪ Generating certificates and keys ...
+    ▪ Booting up control plane ...
+    ▪ Configuring RBAC rules ...
+🔗  Configuring bridge CNI (Container Networking Interface) ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+🌟  Enabled addons: storage-provisioner, default-storageclass
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
 
 
 
