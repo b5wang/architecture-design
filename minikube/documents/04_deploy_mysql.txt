@@ -13,6 +13,16 @@ Deploy MySQL
 > kubectl apply -f mysql-deployment.yaml
 > kubectl apply -f mysql-svc-loadbalancer.yaml
 #---------------------------------------------------
+# MySQL version selection
+https://www.orczhou.com/index.php/how-to-choose-the-right-mysql-version/
+8.0.x is recommanded
+#---------------------------------------------------
+# kustomization
+> kubectl kustomize <kustomization_directory>
+> kubectl kustomize .
+> kubectl apply -k <kustomization_directory>
+# To set ConfigMap and Secret in kubernetes, for configuration or sensitive data
+#---------------------------------------------------
 # 1, Error: secret "mysql-pass" not found
 Refer to secret.yaml.
 Don't know why kustomization.yaml, the name is not correct.
