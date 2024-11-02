@@ -9,54 +9,24 @@ logging:
 spring:
   application:
     name: rate-limiting
-  redis:
-    host: 127.0.0.1
-    port: 36379
-    default-timeout: 60
-zuul:
-  #设置网关在请求转发前为请求设置HOST头信息
-  add-host-header: true
-  ignored-services: '*' #忽略路径或指定服务,*表示忽略所有,只通过下面配置的路由进行访问,多个用逗号隔开
-  #通过 prefix来指定路由前缀，这样请求路径必须以/api开头的才会被zuul拦截代理
-  #prefix: /api
-  host:
-    # 连接时间semaphores
-    connect-timeout-millis: 3000
-    # 每个router最大连接数
-    max-per-route-connections: 100
-    # 最大连接数
-    max-total-connections: 1000
-    # socket超时时间
-    socket-timeout-millis: 60000
-  routes:
-    #分组名
-    servicewel:
-      #为true时会将path中的前缀去除掉
-      strip-prefix: true
-      #当前网关服务拦截路径
-      path: /test/**  #假设请求当前网关服务"http://网关服务ip:网关服务端口号/此处配置拦截的路径/目标服务接口路径"
-      #目标服务在注册中心注册的名称
-      #serviceId: service-wel #实际会转发"http://service-wel/目标服务接口路径"
-      #如果要路由到指定ip端口号,可以使用下方的,也可以使用去指定 url: http://localhost:8080/
-      service-id: http://127.0.0.1:8080/
-  ratelimit:
-    enabled: true
-    behind-proxy: true
-    repository: REDIS #指定限流参数存储方式
-    key-prefix: ilea-getway-key #指定存储时key前缀
-
-    policies:
-      #针对分组限流
-      servicewel:
-        limit: 1 #每秒多少个请求
-        quota: 30 #单位时间内允许访问的总时间
-        refresh-interval: 60 #刷新时间窗口的时间，默认值(秒)
-        #限流粒度:
-        type:
-          - URL #URL通过请求路径区分，
-          - USER #USER是通过登录用户名进行区分，也包括匿名用户
-          - ORIGIN #ORIGIN通过客户端IP地址区分
-
+#  redis:
+#    database: 0
+#    host: localhost
+#    port: 36379
+#    default-timeout: 30000ms
+# Above redis config is for springboot2. springboot3 does not work
+  data:
+    redis:
+      database: 0
+      host: localhost
+      port: 36379
+      default-timeout: 30000ms
+      lettuce:
+        pool:
+          min-idle: 0
+          max-active: 8
+          max-idle: 8
+          max-wait: -1ms
 #csp:
 #  sentinel:
 #    dashboard:
