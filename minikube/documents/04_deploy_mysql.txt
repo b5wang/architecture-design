@@ -52,6 +52,8 @@ select user from mysql.user;
 describe mysql.user;
 select user,host from mysql.user;
 select current_user();
+---
+MySQL username/password: admin,root / 123456
 
 
 
