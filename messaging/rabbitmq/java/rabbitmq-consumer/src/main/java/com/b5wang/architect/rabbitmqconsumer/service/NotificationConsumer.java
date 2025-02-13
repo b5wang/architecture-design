@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@RabbitListener(queues = "#{notificationAnonymousQueue.name}")
+//@RabbitListener(queues = "#{notificationAnonymousQueue.name}")
 public class NotificationConsumer {
 
     /** Faile on startup
@@ -23,7 +23,7 @@ public class NotificationConsumer {
 //        log.info("Anonymous queue name: {}",notificationAnonymousQueue.name());
 //    }
 
-    @RabbitHandler
+    //@RabbitHandler
     public void handle(String msg){
         log.info("Notification: {}", msg);
     }

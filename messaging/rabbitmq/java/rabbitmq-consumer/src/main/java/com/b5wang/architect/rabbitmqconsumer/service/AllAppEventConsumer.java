@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@RabbitListener(queues = "#{appEventAllQueue.name}")
+//@RabbitListener(queues = "#{appEventAllQueue.name}")
 public class AllAppEventConsumer {
 
-    @RabbitHandler
+    //@RabbitHandler
     public void handle(String msg){
         log.info("All app event: {}", msg);
     }

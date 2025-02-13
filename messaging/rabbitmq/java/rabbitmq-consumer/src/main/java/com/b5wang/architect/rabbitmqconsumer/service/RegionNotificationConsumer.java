@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@RabbitListener(queues = "#{regionNotificationAnonymousQueue.name}")
+//@RabbitListener(queues = "#{regionNotificationAnonymousQueue.name}")
 public class RegionNotificationConsumer {
 
-    @RabbitHandler
+    //@RabbitHandler
     public void handle(String msg){
         log.info("Region notification: {}", msg);
     }

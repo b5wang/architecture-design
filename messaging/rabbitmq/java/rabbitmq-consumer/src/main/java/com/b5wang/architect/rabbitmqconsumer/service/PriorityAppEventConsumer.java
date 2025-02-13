@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@RabbitListener(queues = "#{appEventPriorityQueue.name}")
+//@RabbitListener(queues = "#{appEventPriorityQueue.name}")
 public class PriorityAppEventConsumer {
 
-    @RabbitHandler
+    //@RabbitHandler
     public void handle(String msg){
         log.info("Priority app event: {}", msg);
     }
